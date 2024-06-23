@@ -1,10 +1,12 @@
 {
-  "name": "paystack_sdk",
+  "name": "@irabeny/paystack_sdk",
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "description": "",
+  "description": "Paystack API library to manage payments.",
   "scripts": {
+    "check": "bunx @biomejs/biome check --write src/index.ts",
+    "test": "bun run test",
     "build": "bun run build.mjs",
     "prepublishOnly": "bun run build"
   },
@@ -12,19 +14,26 @@
     "dist"
   ],
   "keywords": [
-    "bun"
+    "Paystack",
+    "Payment gateway",
+    "Nodejs"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/wobsoriano/pkg-name#readme",
+  "homepage": "https://github.com/irabeny89/paystack_sdk#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wobsoriano/pkg-name.git"
+    "url": "git+https://github.com/irabeny89/paystack_sdk.git"
   },
-  "bugs": "https://github.com/wobsoriano/pkg-name/issues",
-  "author": "Robert Soriano <sorianorobertc@gmail.com>",
+  "bugs": "https://github.com/irabeny89/paystack_sdk/issues",
+  "author": "Ernest Irabor <irabeny89@gmail.com>",
   "devDependencies": {
-    "bun-plugin-dts": "^0.2.1",
+    "@biomejs/biome": "1.8.2",
     "@types/bun": "^1.0.0",
+    "bun-plugin-dts": "^0.2.1",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1"
   }
 }
