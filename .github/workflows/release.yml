@@ -1,22 +1,27 @@
-name: Release
-
 on:
-  push:
-    tags:
-      - 'v*'
-
+  workflow_dispatch:
+    branches: main
+    
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
+    name: Perform release
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+          with:
+            fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: Cocogitto release
+        id: release
+        uses: oknozor/cocogitto-action@v3
         with:
-          node-version: 16.x
+          release: true
+          git-user: 'Cog Bot'
+          git-user-email: 'mycoolproject@org.org'
 
-      - run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Generate Changelog
+        run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md
+
+      - name: Upload github release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: GITHUB_CHANGELOG.md
+          tag_name: ${{ steps.release.outputs.version }}
