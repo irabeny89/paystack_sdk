@@ -71,12 +71,7 @@ Below are currently implemented features:
 
 ### Todos
 
-- [x] Inititate Transfer
-- [x] Finalize Transfer
-- [x] Initiate Bulk Transfer
-- [x] List Transfers
-- [x] Fetch One Transfer
-- [x] Verify Transfer
+- [ ] add [cocogitto bot][7] to github
 
 ## Conventional Commit and Release Management
 
@@ -88,3 +83,4 @@ Below are currently implemented features:
 [4]: https://paystack.com/docs/api/transfers
 [5]: https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://docs.cocogitto.io/&ved=2ahUKEwig9a7Fxe2GAxU2TKQEHR-ID7cQFnoECBAQAQ&usg=AOvVaw1rvGlr7OxJYz0tip4KSUG8
 [6]: https://github.com/wobsoriano/bun-lib-starter
+[7]: https://docs.cocogitto.io/ci_cd/#github-bot
