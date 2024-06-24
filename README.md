@@ -3,7 +3,6 @@
 This library is based on the official [Paystack][1] payment gateway APIs. This will serve as a Software Development Kit (SDK) for handling payments.
 
 > This project was generated from a [starter template][6]
-> N.B: Use latest version of Nodejs.
 
 ## Table of Content
 
@@ -18,9 +17,13 @@ This library is based on the official [Paystack][1] payment gateway APIs. This w
 
 ## Features
 
-Most of the API functionalitites are implemented.
+Most of Paystack API features are implemented.
 
 These are the currently implemented features:
+
+1. [Transactions](#transactions)
+2. [Transfer Recipients](#transfer-recipients)
+3. [Transfers](#transfers)
 
 ### Transactions
 
