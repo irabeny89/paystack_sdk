@@ -35,6 +35,7 @@ let _logger: null | typeof logger;
  * @class Transaction
  */
 export class Transaction {
+	logLevel: OptionT["logLevel"];
 	/**
 	 * Axios instance preconfigured with secret to query the Paystack API directly.
 	 *
@@ -46,8 +47,8 @@ export class Transaction {
 	constructor(paystackSecret: string, option?: OptionT) {
 		_logger?.info("Transaction.constructor: checking and setting log level");
 		if (option?.logLevel) {
-			logger.level = option.logLevel;
-			_logger = logger;
+			logger.level = this.logLevel = option.logLevel;
+			_logger = logger; // store updated logger
 		}
 		_logger?.info(
 			"Transaction.constructor: current set log level",
