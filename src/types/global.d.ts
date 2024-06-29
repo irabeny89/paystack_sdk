@@ -50,9 +50,9 @@ export type ListQueryParamsT = {
 	perPage?: number;
 	/** default: 1 */
 	page?: number;
-	/** eg 2023-04-01T16:10:02.355Z, 2023-04-01 */
+	/** eg 2023-04-01T16:10:02.355Z or 2023-04-01 */
 	from?: string;
-	/** eg 2023-04-01T16:10:02.355Z, 2023-04-01 */
+	/** eg 2023-04-01T16:10:02.355Z or 2023-04-01 */
 	to?: string;
 };
 
