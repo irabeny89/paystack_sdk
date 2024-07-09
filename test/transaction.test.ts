@@ -1,4 +1,4 @@
-import { describe, beforeEach, expect, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
 import type { AxiosError } from "axios";
 import {
 	PAYSTACK_BASE_URL,
@@ -70,7 +70,10 @@ describe("Paystack Transaction", () => {
 			await transaction.verify(reference);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_VERIFY_PATH + reference);
 		}
 	});
@@ -80,7 +83,10 @@ describe("Paystack Transaction", () => {
 			await transaction.list();
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_LIST_PATH);
 		}
 	});
@@ -92,7 +98,10 @@ describe("Paystack Transaction", () => {
 			await transaction.list(queryParams);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_LIST_PATH);
 			expect(response?.config.params).toEqual(queryParams);
 		}
@@ -105,7 +114,10 @@ describe("Paystack Transaction", () => {
 			await transaction.fetch(transactionId);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(
 				`${TRANSACTION_LIST_PATH}/${transactionId}`,
 			);
@@ -123,7 +135,10 @@ describe("Paystack Transaction", () => {
 			await transaction.chargeAuthorization(requestBody);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_CHARGE_AUTHORIZATION_PATH);
 			expect(JSON.parse(response?.config.data)).toEqual(requestBody);
 		}
@@ -136,7 +151,10 @@ describe("Paystack Transaction", () => {
 			await transaction.timeline(idOrRefence);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(
 				TRANSACTION_TIMELINE_PATH + idOrRefence,
 			);
@@ -150,7 +168,10 @@ describe("Paystack Transaction", () => {
 			await transaction.totals(axiosConfig.params);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_TOTALS_PATH);
 			expect(response?.config.params).toEqual(axiosConfig.params);
 		}
@@ -161,7 +182,10 @@ describe("Paystack Transaction", () => {
 			await transaction.export();
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_EXPORT_PATH);
 		}
 	});
@@ -178,7 +202,10 @@ describe("Paystack Transaction", () => {
 			await transaction.partialDebit(requestBody);
 		} catch (error) {
 			const { response } = error as AxiosError;
+			const authHeader = response?.config?.headers?.Authorization?.toString();
 
+			expect(response?.statusText).toBe("Unauthorized");
+			expect(authHeader?.includes(SECRET)).toBeTruthy();
 			expect(response?.config.url).toBe(TRANSACTION_PARTIAL_DEBIT_PATH);
 			expect(JSON.parse(response?.config.data)).toEqual(requestBody);
 		}

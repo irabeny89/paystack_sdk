@@ -9,7 +9,7 @@ export const TRANSACTION_LIST_PATH = "/transaction";
 export const TRANSACTION_CHARGE_AUTHORIZATION_PATH =
   "/transaction/charge_authorization";
 
-export const TRANSACTION_TIMELINE_PATH = "/timeline/";
+export const TRANSACTION_TIMELINE_PATH = "/transaction/timeline/";
 
 export const TRANSACTION_TOTALS_PATH = "/transaction/totals";
 
