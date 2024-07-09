@@ -78,7 +78,7 @@ export class Transaction {
 	 * @type {AxiosInstance}
 	 * @memberof Transaction
 	 */
-	axiosPaystackClient: AxiosInstance;
+	readonly axiosPaystackClient: AxiosInstance;
 
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
