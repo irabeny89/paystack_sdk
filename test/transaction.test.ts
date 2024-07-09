@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, beforeEach, expect, test } from "bun:test";
 import type { AxiosError } from "axios";
 import {
 	PAYSTACK_BASE_URL,
@@ -20,10 +20,13 @@ import type {
 
 describe("Paystack Transaction", () => {
 	const SECRET = "secret";
+	let transaction: Transaction;
+
+	beforeEach(() => {
+		transaction = new Transaction(SECRET);
+	});
 
 	test("should have an instance with no logger enabled", () => {
-		const transaction = new Transaction(SECRET);
-
 		expect(transaction.logLevel).toBeUndefined();
 	});
 
@@ -37,14 +40,11 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should have Axios instance with Paystack base URL", () => {
-		const transaction = new Transaction(SECRET);
-
 		expect(transaction.axiosPaystackClient).toBeDefined();
 		expect(transaction.axiosPaystackClient.getUri()).toBe(PAYSTACK_BASE_URL);
 	});
 
 	test("should fail to initialize transaction with fake secret key", async () => {
-		const transaction = new Transaction(SECRET);
 		const payData = {
 			email: "test@jest.com",
 			amount: "10000",
@@ -64,7 +64,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to verify transactions", async () => {
-		const transaction = new Transaction(SECRET);
 		const reference = "test-reference";
 
 		try {
@@ -77,8 +76,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to get list of transactions without argument", async () => {
-		const transaction = new Transaction(SECRET);
-
 		try {
 			await transaction.list();
 		} catch (error) {
@@ -89,7 +86,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to get list of transactions with arguments", async () => {
-		const transaction = new Transaction(SECRET);
 		const queryParams = { page: 1, perPage: 20 };
 
 		try {
@@ -104,7 +100,6 @@ describe("Paystack Transaction", () => {
 
 	test("should send request to get a transaction", async () => {
 		const transactionId = "trx012";
-		const transaction = new Transaction(SECRET);
 
 		try {
 			await transaction.fetch(transactionId);
@@ -118,7 +113,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to charge authorization", async () => {
-		const transaction = new Transaction(SECRET);
 		const requestBody: TransactionChargeAuthorizationBodyParamsT = {
 			amount: (1e3).toString(),
 			authorization_code: "123-charge-code",
@@ -136,7 +130,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to get transaction timelines with id or reference", async () => {
-		const transaction = new Transaction(SECRET);
 		const idOrRefence = "idorrefencevalue";
 
 		try {
@@ -151,7 +144,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to get total transactions with pagination", async () => {
-		const transaction = new Transaction(SECRET);
 		const axiosConfig = { params: { perPage: 20, page: 1 } };
 
 		try {
@@ -165,8 +157,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to export transactions", async () => {
-		const transaction = new Transaction(SECRET);
-
 		try {
 			await transaction.export();
 		} catch (error) {
@@ -177,7 +167,6 @@ describe("Paystack Transaction", () => {
 	});
 
 	test("should send request to get partial debit", async () => {
-		const transaction = new Transaction(SECRET);
 		const requestBody: TransactionPartialDebitBodyParamsT = {
 			amount: (1e5).toString(),
 			authorization_code: "AUTH_test101",
