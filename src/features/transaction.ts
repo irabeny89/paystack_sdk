@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
+import type { Logger } from "pino";
 import {
 	PAYSTACK_BASE_URL,
 	TRANSACTION_CHARGE_AUTHORIZATION_PATH,
@@ -10,7 +11,7 @@ import {
 	TRANSACTION_TOTALS_PATH,
 	TRANSACTION_VERIFY_PATH,
 } from "../../config";
-import logger from "../logger";
+import createLogger from "../logger";
 import type {
 	OptionT,
 	PaginatedResponseT,
@@ -29,8 +30,6 @@ import type {
 	TransactionTotalsQueryParamsT,
 	TransactionTotalsResponseDataT,
 } from "../types/transaction_types";
-
-let _logger: null | typeof logger;
 
 /**
  * # [Paystack Transaction API](https://paystack.com/docs/api/transaction)
@@ -70,9 +69,11 @@ export class Transaction {
 	 * @type {OptionT["logLevel"]}
 	 * @memberof Transaction
 	 */
-	logLevel: OptionT["logLevel"];
+	readonly logLevel: OptionT["logLevel"];
+
+	readonly logger: Logger<never> | undefined;
 	/**
-	 * Axios instance preconfigured with `secret` key to query the Paystack API.
+	 * Axios instance pre-configured with `secret` key to query the Paystack API.
 	 *
 	 * @type {AxiosInstance}
 	 * @memberof Transaction
@@ -81,11 +82,12 @@ export class Transaction {
 
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			logger.level = this.logLevel = option.logLevel;
-			_logger = logger; // store updated logger
+			this.logger = createLogger("transaction");
+
+			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		_logger?.info(
+		this.logger?.info(
 			"Transaction.constructor: creating Axios instance with (%s)",
 			PAYSTACK_BASE_URL,
 		);
@@ -93,7 +95,7 @@ export class Transaction {
 			headers: { Authorization: `Bearer ${paystackSecret}` },
 			baseURL: PAYSTACK_BASE_URL,
 		});
-		_logger?.info("Transaction.constructor: created Axios instance");
+		this.logger?.info("Transaction.constructor: created Axios instance");
 	}
 
 	/**
@@ -105,10 +107,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	initialize(body: TransactionInitializeBodyParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.initialize: returning promise to initialize transaction",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.initialize: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient.post<
@@ -125,11 +127,11 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	verify(reference: string) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.verify: returning promise to verify reference %s",
 			reference,
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.verify: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -146,10 +148,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	list(params?: TransactionListQueryParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.list: returning promise to get transaction list",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.list: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -166,11 +168,11 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	fetch(transactionId: string) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.fetchOne: returning promise to get a transaction: transactionId %s",
 			transactionId,
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.fetchOne: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -187,10 +189,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	chargeAuthorization(requestBody: TransactionChargeAuthorizationBodyParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.chargeAuthorization: returning promise to charge with customer authorization",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.chargeAuthorization: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.post<
@@ -207,11 +209,11 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	timeline(idOrReference: string) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.timeline: returning promise to get transaction timeline with id or reference %s",
 			idOrReference,
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.timeline: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -228,10 +230,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	totals(params?: TransactionTotalsQueryParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.totals: returning promise to get total amount received on Paystack",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.totals: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -248,10 +250,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	export(params?: TransactionExportParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.export: returning promise to get exported transactions",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.export: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
@@ -268,10 +270,10 @@ export class Transaction {
 	 * @memberof Transaction
 	 */
 	partialDebit(requestBody: TransactionPartialDebitBodyParamsT) {
-		_logger?.info(
+		this.logger?.info(
 			"transaction.partialDebit: returning promise to perform partial debit",
 		);
-		_logger?.warn(
+		this.logger?.warn(
 			"transaction.partialDebit: handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.post<

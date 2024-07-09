@@ -6,7 +6,7 @@
   "description": "Paystack API library to manage payments.",
   "scripts": {
     "check": "bunx @biomejs/biome check --write src/index.ts",
-    "test": "bun run test",
+    "test": "bun test",
     "build": "bun run build.mjs",
     "prepublishOnly": "bun run build"
   },
