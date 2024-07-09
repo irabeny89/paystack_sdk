@@ -36,9 +36,9 @@ import type {
  * The transactions API allows you to create and manage payments on your integration.
  *
  * ## Note
- * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.
- * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.
- * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`
+ * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.   
+ * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.   
+ * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.   
  *
  * ## Info
  * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
