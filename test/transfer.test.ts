@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import type { AxiosError } from "axios";
 import {
 	PAYSTACK_BASE_URL,
-	TRANSACTION_INITIALIZE_PATH,
 	TRANSFER_FINALIZE_PATH,
 	TRANSFER_INITIATE_BULK_PATH,
 	TRANSFER_PATH,
