@@ -1,28 +1,47 @@
 import axios, { type AxiosInstance } from "axios";
+import type { Logger } from "pino";
 import { PAYSTACK_BASE_URL } from "../config";
 import { Transaction, Transfer, TransferRecipient } from "./features";
-import logger from "./logger";
+import createLogger from "./logger";
 import type { OptionT } from "./types/global";
 
 export { Transaction, Transfer, TransferRecipient } from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
 
-let _logger: null | typeof logger;
-
 /**
- * Paystack constructor to access all its API features
+ * # Paystack SDK
+ * Paystack constructor to access all its API features.
+ *
+ * ## Features
+ * - [x] [Transactions](https://paystack.com/docs/api/transactions)
+ * - [x] [Transfer Recipients](https://paystack.com/docs/api/transfer-recipient)
+ * - [x] [Transfers](https://paystack.com/docs/api/transfer)
+ * - [ ] [Plans](https://paystack.com/docs/api/plans)
+ * - [ ] [Subscriptions](https://paystack.com/docs/api/subscription)
  *
  * @export
  * @class Paystack
  */
 export default class Paystack {
 	/**
-	 * Axios instance preconfigured with secret to query the Paystack API directly
+	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
+	 *
+	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
+	 *
+	 * @type {OptionT["logLevel"]}
+	 * @memberof Transaction
+	 */
+	readonly logLevel: OptionT["logLevel"];
+
+	readonly logger: Logger<never> | undefined;
+
+	/**
+	 * Axios instance pre-configured with secret to query the Paystack API directly
 	 *
 	 * @type {AxiosInstance}
 	 * @memberof TransferRecipient
 	 */
-	axiosPaystackClient: AxiosInstance;
+	readonly axiosPaystackClient: AxiosInstance;
 
 	/**
 	 * Transaction object to manage transactions
@@ -30,7 +49,7 @@ export default class Paystack {
 	 * @type {Transaction}
 	 * @memberof Paystack
 	 */
-	transaction: Transaction;
+	readonly transaction: Transaction;
 
 	/**
 	 * Transfer recipient creation object property to manage transfers
@@ -38,7 +57,7 @@ export default class Paystack {
 	 * @type {TransferRecipient}
 	 * @memberof Paystack
 	 */
-	transferRecipient: TransferRecipient;
+	readonly transferRecipient: TransferRecipient;
 
 	/**
 	 * Transfer object with methods to manage transfers.
@@ -46,7 +65,7 @@ export default class Paystack {
 	 * @type {Transfer}
 	 * @memberof Paystack
 	 */
-	transfer: Transfer;
+	readonly transfer: Transfer;
 
 	/**
 	 * Creates an instance of Paystack.
@@ -55,49 +74,52 @@ export default class Paystack {
 	 * @param {OptionT} [option] - config options.
 	 * @memberof Paystack
 	 */
-	constructor(paystackSecret: string, option?: OptionT) {
-		_logger?.info("Paystack.constructor: checking and setting log level");
-		if (option?.logLevel) {
-			logger.level = option.logLevel;
-			_logger = logger;
-		}
-		_logger?.info(
-			"Paystack.constructor: current set log level",
-			option?.logLevel,
-		);
 
-		_logger?.info(
+	constructor(paystackSecret: string, option?: OptionT) {
+		if (option?.logLevel) {
+			this.logger = createLogger("paystack");
+
+			this.logger?.info("Paystack.constructor: checking and setting log level");
+			this.logger.level = this.logLevel = option.logLevel;
+
+			this.logger?.info(
+				"Paystack.constructor: current set log level",
+				option?.logLevel,
+			);
+		}
+
+		this.logger?.info(
 			"Paystack.constructor: creating Axios instance with Paystack secret and base url (%s) in header",
 		);
 		this.axiosPaystackClient = axios.create({
 			headers: { Authorization: `Bearer ${paystackSecret}` },
 			baseURL: PAYSTACK_BASE_URL,
 		});
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: Axios instance created with secret and base url in header",
 		);
 
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: assigning Transaction instance to Paystack instance transaction property",
 		);
 		this.transaction = new Transaction(paystackSecret, option);
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: transaction instance assigned to Paystack instance transaction property",
 		);
 
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: assigning TransferRecipient instance to Paystack instance transferRecipient property",
 		);
 		this.transferRecipient = new TransferRecipient(paystackSecret, option);
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: TransferRecipient instance assigned to Paystack instance TransferRecipient property",
 		);
 
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: setting transfer instance to transfer property.",
 		);
 		this.transfer = new Transfer(paystackSecret, option);
-		_logger?.info(
+		this.logger?.info(
 			"Paystack.constructor: transfer instance set to transfer property.",
 		);
 	}
