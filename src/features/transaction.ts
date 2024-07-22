@@ -44,9 +44,9 @@ import type {
  * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
  * * `perPage` and `page` has default values `50` and `1` respectively.
  *
- * ## Features To Do
+ * ## Features
  * - [x] check and set log level.
- * - [x] Axios client preconfigured to connect to Paystack.
+ * - [x] Axios client pre-configured to connect to Paystack.
  * - [x] Initialize transactions.
  * - [x] Verify transactions.
  * - [x] List transactions.
@@ -55,12 +55,23 @@ import type {
  * - [x] Timeline of transactions.
  * - [x] Total amount received.
  * - [x] Export transaction records (currently as CSV file).
- * - [x] Partial debitting of customers.
+ * - [x] Partial debiting of customers.
  *
  * @export Transaction
  * @class Transaction
  */
 export class Transaction {
+	readonly logLevel: OptionT["logLevel"];
+	
+	readonly logger: Logger<never> | undefined;
+	/**
+	 * Axios instance pre-configured with `secret` key to query the Paystack API.
+	*
+	* @type {AxiosInstance}
+	* @memberof Transaction
+	*/
+	readonly axiosPaystackClient: AxiosInstance;
+	
 	/**
 	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
 	 *
@@ -69,17 +80,6 @@ export class Transaction {
 	 * @type {OptionT["logLevel"]}
 	 * @memberof Transaction
 	 */
-	readonly logLevel: OptionT["logLevel"];
-
-	readonly logger: Logger<never> | undefined;
-	/**
-	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	 *
-	 * @type {AxiosInstance}
-	 * @memberof Transaction
-	 */
-	readonly axiosPaystackClient: AxiosInstance;
-
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
 			this.logger = createLogger("transaction");
@@ -123,7 +123,7 @@ export class Transaction {
 	 * Confirms the status of a transaction. Alternative is the `webhook` API on your backend that you register with Paystack on admin console where you listen for the `charge.success` event before giving value.
 	 *
 	 * @param {string} reference - a reference to an initialized/processed transaction
-	 * @return {*} a response object
+	 * @return a response object
 	 * @memberof Transaction
 	 */
 	verify(reference: string) {
@@ -169,7 +169,7 @@ export class Transaction {
 	 */
 	fetch(transactionId: string) {
 		this.logger?.info(
-			"transaction.fetchOne: returning promise to get a transaction: transactionId %s",
+			"transaction.fetchOne: returning promise to fetch a transaction: transactionId %s",
 			transactionId,
 		);
 		this.logger?.warn(
@@ -185,7 +185,7 @@ export class Transaction {
 	 * All authorizations marked as reusable can be charged with this method whenever you need to receive payment without the sender entering their card details again.
 	 *
 	 * @param {TransactionChargeAuthorizationBodyParamsT} requestBody amount, email and authorization code are required
-	 * @return {*}  transaction response data
+	 * @return transaction response data
 	 * @memberof Transaction
 	 */
 	chargeAuthorization(requestBody: TransactionChargeAuthorizationBodyParamsT) {
@@ -205,7 +205,7 @@ export class Transaction {
 	 * View the timeline of a transaction.
 	 *
 	 * @param {string} idOrReference id or reference of the transaction
-	 * @return {*}  response data
+	 * @return response data
 	 * @memberof Transaction
 	 */
 	timeline(idOrReference: string) {
@@ -226,7 +226,7 @@ export class Transaction {
 	 * Total amount received on your account.
 	 *
 	 * @param {TransactionTotalsQueryParamsT} [params] query parameters
-	 * @return {*} response data
+	 * @return response data
 	 * @memberof Transaction
 	 */
 	totals(params?: TransactionTotalsQueryParamsT) {
@@ -246,7 +246,7 @@ export class Transaction {
 	 * Export list of transaction records carried out on your integration. Mostly a path to download as a Comma Separated Value (CSV) file.
 	 *
 	 * @param {TransactionExportParamsT} [params] optional query parameters
-	 * @return {*} response data
+	 * @return response data
 	 * @memberof Transaction
 	 */
 	export(params?: TransactionExportParamsT) {
@@ -266,7 +266,7 @@ export class Transaction {
 	 * Debit customer partially.
 	 *
 	 * @param {TransactionPartialDebitBodyParamsT} requestBody request body
-	 * @return {*}  transaction response
+	 * @return transaction response
 	 * @memberof Transaction
 	 */
 	partialDebit(requestBody: TransactionPartialDebitBodyParamsT) {
