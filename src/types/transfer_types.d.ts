@@ -4,7 +4,7 @@ import {
 	IdAndTimestampsT,
 	ListQueryParamsT,
 	MetaDataT,
-	RecipientTypeT,
+	RecipientOptionT,
 } from "./global";
 
 type TransferSourceT = "balance";
@@ -31,7 +31,7 @@ type RecipientDetailsT = {
 
 type ListRecipientT = {
 	domain: string;
-	type: RecipientTypeT;
+	type: RecipientOptionT;
 	currency: CurrencyOptionT;
 	name: string;
 	details: RecipientDetailsT;

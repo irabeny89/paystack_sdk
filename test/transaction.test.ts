@@ -44,7 +44,7 @@ describe("Paystack Transaction", () => {
 		expect(transaction.axiosPaystackClient.getUri()).toBe(PAYSTACK_BASE_URL);
 	});
 
-	test("should fail to initialize transaction with fake secret key", async () => {
+	test("should send request to initialize transaction", async () => {
 		const payData = {
 			email: "test@jest.com",
 			amount: "10000",

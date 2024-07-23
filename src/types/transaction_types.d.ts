@@ -7,12 +7,14 @@ import {
 	MetaDataT,
 	PaymentChannelOptionT,
 	RiskActionOptionT,
-	StatusOptionT,
+	AuthorizationT
 } from "./global";
 
-type TransactionBearerOptionT = "account" | "subaccount";
+export type StatusOptionT = "failed" | "abandoned" | "success";
 
-type TransactionHistoryTypeOptionT =
+type BearerOptionT = "account" | "subaccount";
+
+type HistoryTypeOptionT =
 	| "success"
 	| "action"
 	| "open"
@@ -20,23 +22,7 @@ type TransactionHistoryTypeOptionT =
 	| "error"
 	| "close";
 
-type TransactionResponseAuthorizationT = {
-	authorization_code?: string | null;
-	bin?: string | null;
-	last4?: string | null;
-	exp_month?: string | null;
-	exp_year?: string | null;
-	channel?: PaymentChannelOptionT | null;
-	card_type?: CardBrandOptionT | null;
-	bank?: string | null;
-	account_name?: string | null;
-	country_code?: string | null;
-	brand?: PaymentChannelOptionT | null;
-	reusable?: boolean | null;
-	signature?: string | null;
-};
-
-type TransactionResponseCustomerT = {
+type CustomerT = {
 	id?: string | null;
 	first_name?: string | null;
 	last_name?: string | null;
@@ -48,13 +34,13 @@ type TransactionResponseCustomerT = {
 	international_format?: string | null;
 };
 
-type TransactionHistoryT = {
-	type: TransactionHistoryTypeOptionT;
+type HistoryT = {
+	type: HistoryTypeOptionT;
 	message: string;
 	time: number;
 };
 
-type TransactionResponseLogT = {
+type LogT = {
 	start_time: number;
 	time_spent: number;
 	attempts: number;
@@ -62,10 +48,10 @@ type TransactionResponseLogT = {
 	success: boolean;
 	mobile: boolean;
 	input: [];
-	history: TransactionHistoryT[];
+	history: HistoryT[];
 };
 
-type TransactionByCurrencyT = {
+type VolumeByCurrencyT = {
 	currency: CurrencyOptionT;
 	/** amount specified in lowest denominations eg: `NGN kobo` etc */
 	amount: number;
@@ -121,7 +107,7 @@ export type TransactionChargeAuthorizationBodyParamsT = {
 	/** a flat fee to charge the subaccount for this transaction in lowest denominations */
 	transaction_charge?: number;
 	/** who bears Paystack charges eg account or subaccount */
-	bearer?: TransactionBearerOptionT;
+	bearer?: BearerOptionT;
 	/** if you are making a schedule charge call, it is a good idea to queue them to avoid transaction processing error */
 	queue?: boolean;
 };
@@ -194,12 +180,12 @@ export type TransactionResponseDataT = {
 	currency?: CurrencyOptionT | null;
 	ip_address?: string | null;
 	metadata?: MetaDataT | null;
-	log?: TransactionResponseLogT | null;
+	log?: LogT | null;
 	fees?: number | null;
 	paidAt?: string | null;
-	authorization?: TransactionResponseAuthorizationT | null;
+	authorization?: AuthorizationT | null;
 	fees_split?: any | null;
-	customer?: TransactionResponseCustomerT | null;
+	customer?: CustomerT | null;
 	plan?: any | null;
 	split?: object | null;
 	order_id?: any | null;
@@ -223,16 +209,16 @@ export type TransactionTimelineResponseDataT = {
 	mobile: boolean;
 	input: any[];
 	channel: PaymentChannelOptionT;
-	history: TransactionHistoryT[];
+	history: HistoryT[];
 };
 
 export type TransactionTotalsResponseDataT = {
 	total_transactions: number;
 	unique_customers: number;
 	total_volume: number;
-	total_volume_by_currency: TransactionByCurrencyT[];
+	total_volume_by_currency: VolumeByCurrencyT[];
 	pending_transfers: number;
-	pending_transfers_by_currency: TransactionByCurrencyT[];
+	pending_transfers_by_currency: VolumeByCurrencyT[];
 };
 
 export type TransactionExportResponseDataT = Record<"path", string>;

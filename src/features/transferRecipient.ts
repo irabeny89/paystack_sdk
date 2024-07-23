@@ -13,7 +13,7 @@ import {
 import {
 	ListQueryParamsT,
 	PaginatedResponseT,
-	RecipientTypeT,
+	RecipientOptionT,
 	ResponseDataT,
 	StatusAndMessageT,
 } from "../types/global";
@@ -93,7 +93,7 @@ export class TransferRecipient {
 	 * @return response data
 	 * @memberof TransferRecipient
 	 */
-	create<T extends RecipientTypeT>(
+	create<T extends RecipientOptionT>(
 		requestBody: GetTransferRecipientBodyParamsT<T>
 	) {
 		this.logger?.info(
