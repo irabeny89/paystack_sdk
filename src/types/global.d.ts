@@ -62,15 +62,16 @@ export type CardBrandOptionT = "visa" | "verve" | "mastercard";
 
 export type PaymentChannelOptionT = "card" | "bank" | "ussd" | "qr";
 
-export type StatusOptionT = "failed" | "abandoned" | "success";
-
 export type DomainOptionT = "test" | "live";
 
 export type GatewayResponseOptionT = "declined" | "successful";
 
 export type RiskActionOptionT = "default" | "deny";
 
-export type RecipientTypeT = "nuban" | "basa" | "mobile_money";
+export type RecipientOptionT = "nuban" | "basa" | "mobile_money";
+
+/** Interval in words. Valid intervals are: daily, weekly, monthly,quarterly, biannually (every 6 months), annually. */
+export type IntervalOptionT = "daily" | "weekly" | "monthly" | "quarterly" | "biannually" | "annually";
 
 export type OptionT = {
 	/** 
@@ -86,3 +87,39 @@ export type OptionT = {
 	 * */
 	logLevel?: Level | "silent";
 };
+
+export type AuthorizationT = {
+	authorization_code?: string | null;
+	bin?: string | null;
+	last4?: string | null;
+	exp_month?: string | null;
+	exp_year?: string | null;
+	channel?: PaymentChannelOptionT | null;
+	card_type?: CardBrandOptionT | null;
+	bank?: string | null;
+	account_name?: string | null;
+	country_code?: string | null;
+	brand?: PaymentChannelOptionT | null;
+	reusable?: boolean | null;
+	signature?: string | null;
+}
+
+export type SubscriptionT = {
+	customer: number;
+	plan: number;
+	integration: number;
+	domain: string;
+	start: number;
+	// TODO: use string union
+	// ? create string union in subscription_type.ts file
+	status: string;
+	quantity: number;
+	amount: number;
+	subscription_code: string;
+	email_token?: string | null;
+	authorization: AuthorizationT;
+	easy_cron_id?: any | null;
+	cron_expression?: string;
+	next_payment_date: string;
+	open_invoice?: any | null;
+} & IdAndTimestampsT;

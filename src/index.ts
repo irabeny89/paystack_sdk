@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios";
 import type { Logger } from "pino";
 import { PAYSTACK_BASE_URL } from "../config";
-import { Transaction, Transfer, TransferRecipient } from "./features";
+import { Plan, Transaction, Transfer, TransferRecipient } from "./features";
 import createLogger from "./logger";
 import type { OptionT } from "./types/global";
 
@@ -16,7 +16,7 @@ export { convertToMainUnit, convertToSubUnit } from "./utils";
  * - [x] [Transactions](https://paystack.com/docs/api/transactions)
  * - [x] [Transfer Recipients](https://paystack.com/docs/api/transfer-recipient)
  * - [x] [Transfers](https://paystack.com/docs/api/transfer)
- * - [ ] [Plans](https://paystack.com/docs/api/plans)
+ * - [x] [Plans](https://paystack.com/docs/api/plans)
  * - [ ] [Subscriptions](https://paystack.com/docs/api/subscription)
  *
  * @export
@@ -66,6 +66,18 @@ export default class Paystack {
 	 * @memberof Paystack
 	 */
 	readonly transfer: Transfer;
+
+	/**
+  * # [Paystack Plans API](https://paystack.com/docs/api/plan)
+  * The Plans API allows you create and manage installment payment options on your integration.
+  * 
+  * ## Features
+  * - [x] create plan
+  * - [x] list plans
+  * - [x] fetch plan
+  * - [x] update plan
+	*/
+	readonly plan: Plan;
 
 	/**
 	 * Creates an instance of Paystack.
@@ -122,5 +134,9 @@ export default class Paystack {
 		this.logger?.info(
 			"Paystack.constructor: transfer instance set to transfer property.",
 		);
+
+		this.logger?.info("Paystack.constructor: setting plan instance to plan property");
+		this.plan = new Plan(paystackSecret, option)
+		this.logger?.info("Paystack.constructor: plan instance set to plan property")
 	}
 }

@@ -26,3 +26,5 @@ export const TRANSFER_PATH = "/transfer";
 export const TRANSFER_FINALIZE_PATH = "/transfer/finalize_transfer";
 
 export const TRANSFER_INITIATE_BULK_PATH = "/transfer/bulk";
+
+export const PLAN_PATH = "/plan"
