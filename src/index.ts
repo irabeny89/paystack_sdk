@@ -84,59 +84,40 @@ export default class Paystack {
 	 *
 	 * @param {string} paystackSecret - paystack secret key.
 	 * @param {OptionT} [option] - config options.
-	 * @memberof Paystack
 	 */
 
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("paystack");
+			this.logger = createLogger("Paystack");
 
-			this.logger?.info("Paystack.constructor: checking and setting log level");
+			this.logger?.info("constructor => setting and adding log level (%s) -> logLevel", option.logLevel);
 			this.logger.level = this.logLevel = option.logLevel;
-
-			this.logger?.info(
-				"Paystack.constructor: current set log level",
-				option?.logLevel,
-			);
 		}
 
 		this.logger?.info(
-			"Paystack.constructor: creating Axios instance with Paystack secret and base url (%s) in header",
+			"constructor => adding custom Axios client -> axiosPaystackClient",
 		);
 		this.axiosPaystackClient = axios.create({
 			headers: { Authorization: `Bearer ${paystackSecret}` },
 			baseURL: PAYSTACK_BASE_URL,
 		});
-		this.logger?.info(
-			"Paystack.constructor: Axios instance created with secret and base url in header",
-		);
 
 		this.logger?.info(
-			"Paystack.constructor: assigning Transaction instance to Paystack instance transaction property",
+			"constructor => adding Transaction instance -> transaction",
 		);
 		this.transaction = new Transaction(paystackSecret, option);
-		this.logger?.info(
-			"Paystack.constructor: transaction instance assigned to Paystack instance transaction property",
-		);
 
 		this.logger?.info(
-			"Paystack.constructor: assigning TransferRecipient instance to Paystack instance transferRecipient property",
+			"constructor => adding Transfer Recipient instance -> transferRecipient",
 		);
 		this.transferRecipient = new TransferRecipient(paystackSecret, option);
-		this.logger?.info(
-			"Paystack.constructor: TransferRecipient instance assigned to Paystack instance TransferRecipient property",
-		);
 
 		this.logger?.info(
-			"Paystack.constructor: setting transfer instance to transfer property.",
+			"constructor => adding Transfer instance -> transfer",
 		);
 		this.transfer = new Transfer(paystackSecret, option);
-		this.logger?.info(
-			"Paystack.constructor: transfer instance set to transfer property.",
-		);
 
-		this.logger?.info("Paystack.constructor: setting plan instance to plan property");
+		this.logger?.info("constructor => adding Plan instance -> plan");
 		this.plan = new Plan(paystackSecret, option)
-		this.logger?.info("Paystack.constructor: plan instance set to plan property")
 	}
 }
