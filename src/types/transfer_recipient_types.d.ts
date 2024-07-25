@@ -1,4 +1,4 @@
-import {
+import type {
 	CurrencyOptionT,
 	DomainOptionT,
 	IdAndTimestampsT,
@@ -43,8 +43,8 @@ export type TransferRecipientMobileMoneyBodyParamsT = Omit<
 
 export type GetTransferRecipientBodyParamsT<T extends RecipientOptionT> =
 	T extends "mobile_money"
-	? TransferRecipientMobileMoneyBodyParamsT
-	: TransferRecipientNubanOrBasaBodyParamsT;
+		? TransferRecipientMobileMoneyBodyParamsT
+		: TransferRecipientNubanOrBasaBodyParamsT;
 
 export type TransferRecipientBulkCreateBodyParamsT = {
 	/** list of transfer recipient object. Each object should contain required fields for recipient type(`nuban`, `basa` or `mobile_money`) option.
@@ -72,5 +72,5 @@ export type TransferRecipientResponseDataT = {
 
 export type TransferRecipientBulkCreateResponseDataT = {
 	success: TransferRecipientResponseDataT[];
-	errors: any[];
+	errors: unknown[];
 };

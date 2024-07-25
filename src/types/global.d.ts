@@ -1,4 +1,4 @@
-import { Level } from "pino";
+import type { Level } from "pino";
 
 export type JsonDataTypeOptionT = string | number | boolean;
 
@@ -71,19 +71,25 @@ export type RiskActionOptionT = "default" | "deny";
 export type RecipientOptionT = "nuban" | "basa" | "mobile_money";
 
 /** Interval in words. Valid intervals are: daily, weekly, monthly,quarterly, biannually (every 6 months), annually. */
-export type IntervalOptionT = "daily" | "weekly" | "monthly" | "quarterly" | "biannually" | "annually";
+export type IntervalOptionT =
+	| "daily"
+	| "weekly"
+	| "monthly"
+	| "quarterly"
+	| "biannually"
+	| "annually";
 
 export type OptionT = {
-	/** 
-	 * Debug levels are:    
-	 * 1:`fatal`   
-	 * 2:`error`   
-	 * 3:`warn`   
-	 * 4:`info`   
-	 * 5:`debug`   
-	 * 6:`trace`   
-	 * 7:`silent`.   
-	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging. 
+	/**
+	 * Debug levels are:
+	 * 1:`fatal`
+	 * 2:`error`
+	 * 3:`warn`
+	 * 4:`info`
+	 * 5:`debug`
+	 * 6:`trace`
+	 * 7:`silent`.
+	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 * */
 	logLevel?: Level | "silent";
 };
@@ -102,7 +108,7 @@ export type AuthorizationT = {
 	brand?: PaymentChannelOptionT | null;
 	reusable?: boolean | null;
 	signature?: string | null;
-}
+};
 
 export type SubscriptionT = {
 	customer: number;
@@ -118,8 +124,8 @@ export type SubscriptionT = {
 	subscription_code: string;
 	email_token?: string | null;
 	authorization: AuthorizationT;
-	easy_cron_id?: any | null;
+	easy_cron_id?: unknown | null;
 	cron_expression?: string;
 	next_payment_date: string;
-	open_invoice?: any | null;
+	open_invoice?: unknown | null;
 } & IdAndTimestampsT;

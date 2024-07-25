@@ -1,13 +1,13 @@
 import {
+	type AuthorizationT,
 	CardBrandOptionT,
-	CurrencyOptionT,
-	DomainOptionT,
-	GatewayResponseOptionT,
-	ListQueryParamsT,
-	MetaDataT,
-	PaymentChannelOptionT,
-	RiskActionOptionT,
-	AuthorizationT
+	type CurrencyOptionT,
+	type DomainOptionT,
+	type GatewayResponseOptionT,
+	type ListQueryParamsT,
+	type MetaDataT,
+	type PaymentChannelOptionT,
+	type RiskActionOptionT,
 } from "./global";
 
 export type StatusOptionT = "failed" | "abandoned" | "success";
@@ -184,20 +184,20 @@ export type TransactionResponseDataT = {
 	fees?: number | null;
 	paidAt?: string | null;
 	authorization?: AuthorizationT | null;
-	fees_split?: any | null;
+	fees_split?: unknown | null;
 	customer?: CustomerT | null;
-	plan?: any | null;
+	plan?: unknown | null;
 	split?: object | null;
-	order_id?: any | null;
+	order_id?: unknown | null;
 	createdAt?: string | null;
 	requested_amount?: number | null;
-	pos_transaction_data?: any | null;
-	source?: any | null;
-	fees_breakdown?: any | null;
+	pos_transaction_data?: unknown | null;
+	source?: unknown | null;
+	fees_breakdown?: unknown | null;
 	transaction_date?: string | null;
 	plan_object?: object | null;
 	subaccount?: object | null;
-	timeline?: any | null;
+	timeline?: unknown | null;
 };
 
 export type TransactionTimelineResponseDataT = {
@@ -207,7 +207,7 @@ export type TransactionTimelineResponseDataT = {
 	errors: number;
 	success: boolean;
 	mobile: boolean;
-	input: any[];
+	input: unknown[];
 	channel: PaymentChannelOptionT;
 	history: HistoryT[];
 };
