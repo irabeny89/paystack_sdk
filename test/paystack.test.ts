@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import Paystack from "../src";
-import { OptionT } from "../src/types/global";
 import { PAYSTACK_BASE_URL } from "../config";
+import Paystack from "../src";
+import type { OptionT } from "../src/types/global";
 
 describe("Paystack", () => {
 	const SECRET = "secret";
@@ -27,9 +27,7 @@ describe("Paystack", () => {
 
 	test("should have Axios instance with Paystack base URL", () => {
 		expect(paystack.axiosPaystackClient).toBeDefined();
-		expect(paystack.axiosPaystackClient.getUri()).toBe(
-			PAYSTACK_BASE_URL,
-		);
+		expect(paystack.axiosPaystackClient.getUri()).toBe(PAYSTACK_BASE_URL);
 	});
 
 	test("should have Paystack transaction object property defined", () => {

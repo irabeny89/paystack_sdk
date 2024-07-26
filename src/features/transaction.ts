@@ -34,16 +34,7 @@ import type {
 /**
  * # [Paystack Transaction API](https://paystack.com/docs/api/transaction)
  * The transactions API allows you to create and manage payments on your integration.
- *
- * ## Note
- * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.   
- * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.   
- * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.   
- *
- * ## Info
- * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
- * * `perPage` and `page` has default values `50` and `1` respectively.
- *
+ * 
  * ## Features
  * - [x] check and set log level.
  * - [x] Axios client pre-configured to connect to Paystack.
@@ -56,43 +47,52 @@ import type {
  * - [x] Total amount received.
  * - [x] Export transaction records (currently as CSV file).
  * - [x] Partial debiting of customers.
+ * 
+ * ## Info
+ * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
+ * * `perPage` and `page` has default values `50` and `1` respectively.
+ * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
+ *
+ * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
+ * 
+ * ## Note
+ * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.
+ * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.
+ * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
  */
 export class Transaction {
-	readonly logLevel: OptionT["logLevel"];
-	
-	readonly logger: Logger<never> | undefined;
-	/**
-	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	*
-	* @type {AxiosInstance}
-	* @memberof Transaction
-	*/
-	readonly axiosPaystackClient: AxiosInstance;
-	
-	// #region constructor
 	/**
 	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
-	 *
-	 * @type {OptionT["logLevel"]}
 	 */
+	readonly logLevel: OptionT["logLevel"];
+
+	readonly logger: Logger<never> | undefined;
+	/**
+	 * Axios instance pre-configured with `secret` key to query the Paystack API.
+	 */
+	readonly axiosPaystackClient: AxiosInstance;
+
+	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("transaction");
+			this.logger = createLogger("Transaction");
 
+			this.logger?.info(
+				"constructor => setting and adding log level (%s) -> logLevel",
+				option.logLevel,
+			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
 		this.logger?.info(
-			"Transaction.constructor: creating Axios instance with (%s)",
-			PAYSTACK_BASE_URL,
+			"constructor => adding custom Axios client -> axiosPaystackClient",
 		);
 		this.axiosPaystackClient = axios.create({
 			headers: { Authorization: `Bearer ${paystackSecret}` },
 			baseURL: PAYSTACK_BASE_URL,
 		});
-		this.logger?.info("Transaction.constructor: created Axios instance");
 	}
 
 	// #region initialize
@@ -105,10 +105,10 @@ export class Transaction {
 	 */
 	initialize(body: TransactionInitializeBodyParamsT) {
 		this.logger?.info(
-			"transaction.initialize: returning promise to initialize transaction",
+			"initialize => returning promise to initialize transaction",
 		);
 		this.logger?.warn(
-			"transaction.initialize: handle error for returned promised response",
+			"initialize => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient.post<
 			ResponseDataT<TransactionInitializeResponseDataT>
@@ -125,12 +125,10 @@ export class Transaction {
 	 */
 	verify(reference: string) {
 		this.logger?.info(
-			"transaction.verify: returning promise to verify reference %s",
+			"verify => returning promise to verify reference %s",
 			reference,
 		);
-		this.logger?.warn(
-			"transaction.verify: handle error for returned promised response",
-		);
+		this.logger?.warn("verify => handle error for returned promised response");
 		return this.axiosPaystackClient?.get<
 			ResponseDataT<TransactionResponseDataT>
 		>(TRANSACTION_VERIFY_PATH + reference);
@@ -145,12 +143,8 @@ export class Transaction {
 	 * @return Axios response
 	 */
 	list(params?: TransactionListQueryParamsT) {
-		this.logger?.info(
-			"transaction.list: returning promise to get transaction list",
-		);
-		this.logger?.warn(
-			"transaction.list: handle error for returned promised response",
-		);
+		this.logger?.info("list => returning promise to get transaction list");
+		this.logger?.warn("list => handle error for returned promised response");
 		return this.axiosPaystackClient?.get<
 			PaginatedResponseT<TransactionResponseDataT>
 		>(TRANSACTION_LIST_PATH, { params });
@@ -166,12 +160,10 @@ export class Transaction {
 	 */
 	fetch(transactionId: string) {
 		this.logger?.info(
-			"transaction.fetchOne: returning promise to fetch a transaction: transactionId %s",
+			"fetch => returning promise to fetch a transaction: transactionId %s",
 			transactionId,
 		);
-		this.logger?.warn(
-			"transaction.fetchOne: handle error for returned promised response",
-		);
+		this.logger?.warn("fetch => handle error for returned promised response");
 		return this.axiosPaystackClient?.get<
 			ResponseDataT<TransactionResponseDataT>
 		>(`${TRANSACTION_LIST_PATH}/${transactionId}`);
@@ -187,10 +179,10 @@ export class Transaction {
 	 */
 	chargeAuthorization(requestBody: TransactionChargeAuthorizationBodyParamsT) {
 		this.logger?.info(
-			"transaction.chargeAuthorization: returning promise to charge with customer authorization",
+			"chargeAuthorization => returning promise to charge with customer authorization",
 		);
 		this.logger?.warn(
-			"transaction.chargeAuthorization: handle error for returned promised response",
+			"chargeAuthorization => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.post<
 			ResponseDataT<TransactionResponseDataT>
@@ -207,11 +199,11 @@ export class Transaction {
 	 */
 	timeline(idOrReference: string) {
 		this.logger?.info(
-			"transaction.timeline: returning promise to get transaction timeline with id or reference %s",
+			"timeline => returning promise to get transaction timeline with id or reference %s",
 			idOrReference,
 		);
 		this.logger?.warn(
-			"transaction.timeline: handle error for returned promised response",
+			"timeline => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.get<
 			ResponseDataT<TransactionTimelineResponseDataT[]>
@@ -228,11 +220,9 @@ export class Transaction {
 	 */
 	totals(params?: TransactionTotalsQueryParamsT) {
 		this.logger?.info(
-			"transaction.totals: returning promise to get total amount received on Paystack",
+			"totals => returning promise to get total amount received on Paystack",
 		);
-		this.logger?.warn(
-			"transaction.totals: handle error for returned promised response",
-		);
+		this.logger?.warn("totals => handle error for returned promised response");
 		return this.axiosPaystackClient?.get<
 			ResponseDataT<TransactionTotalsResponseDataT>
 		>(TRANSACTION_TOTALS_PATH, { params });
@@ -248,11 +238,9 @@ export class Transaction {
 	 */
 	export(params?: TransactionExportParamsT) {
 		this.logger?.info(
-			"transaction.export: returning promise to get exported transactions",
+			"export => returning promise to get exported transactions",
 		);
-		this.logger?.warn(
-			"transaction.export: handle error for returned promised response",
-		);
+		this.logger?.warn("export => handle error for returned promised response");
 		return this.axiosPaystackClient?.get<
 			ResponseDataT<TransactionExportResponseDataT>
 		>(TRANSACTION_EXPORT_PATH, { params });
@@ -268,10 +256,10 @@ export class Transaction {
 	 */
 	partialDebit(requestBody: TransactionPartialDebitBodyParamsT) {
 		this.logger?.info(
-			"transaction.partialDebit: returning promise to perform partial debit",
+			"partialDebit => returning promise to perform partial debit",
 		);
 		this.logger?.warn(
-			"transaction.partialDebit: handle error for returned promised response",
+			"partialDebit => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient?.post<
 			ResponseDataT<TransactionResponseDataT>

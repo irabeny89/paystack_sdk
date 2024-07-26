@@ -1,19 +1,35 @@
 import axios, { type AxiosInstance } from "axios";
 import type { Logger } from "pino";
-import createLogger from "../logger";
-import { OptionT, PaginatedResponseT, ResponseDataT } from "../types/global";
 import { PAYSTACK_BASE_URL, PLAN_PATH } from "../../config";
-import { PlanBodyParamsT, PlanCreateResponseDataT, PlanListQueryParamsT, PlanResponseDataT } from "../types/plan_types";
+import createLogger from "../logger";
+import type {
+	OptionT,
+	PaginatedResponseT,
+	ResponseDataT,
+} from "../types/global";
+import type {
+	PlanBodyParamsT,
+	PlanCreateResponseDataT,
+	PlanListQueryParamsT,
+	PlanResponseDataT,
+} from "../types/plan_types";
 
 /**
  * # [Paystack Plans API](https://paystack.com/docs/api/plan)
  * The Plans API allows you create and manage installment payment options on your integration.
- * 
+ *
  * ## Features
  * - [x] create plan
  * - [x] list plans
  * - [x] fetch plan
  * - [x] update plan
+ *
+ * ## Info
+ * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
+ * * `perPage` and `page` has default values `50` and `1` respectively.
+ * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
+ *
+ * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
  */
 export class Plan {
 	readonly logLevel: OptionT["logLevel"];
@@ -21,37 +37,26 @@ export class Plan {
 	readonly logger: Logger<never> | undefined;
 	/**
 	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	*
-	* @type {AxiosInstance}
-	* @memberof Transaction
-	*/
+	 */
 	readonly axiosPaystackClient: AxiosInstance;
 
 	// #region constructor
-	/**
-	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
-	 *
-	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
-	 *
-	 * @type {OptionT["logLevel"]}
-	 * @memberof Transaction
-	 */
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("transaction");
+			this.logger = createLogger("Transaction");
 
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
 		this.logger?.info(
-			"Transaction.constructor: creating Axios instance with (%s)",
+			"constructor => creating Axios instance with (%s)",
 			PAYSTACK_BASE_URL,
 		);
 		this.axiosPaystackClient = axios.create({
 			headers: { Authorization: `Bearer ${paystackSecret}` },
 			baseURL: PAYSTACK_BASE_URL,
 		});
-		this.logger?.info("Transaction.constructor: created Axios instance");
+		this.logger?.info("constructor => created Axios instance");
 	}
 
 	// #region create
@@ -62,11 +67,11 @@ export class Plan {
 	 * @returns axios response
 	 */
 	create(bodyParams: PlanBodyParamsT) {
-		this.logger?.info("plan.create: returning promise to create plan")
-		this.logger?.warn(
-			"plan.create: handle error for returned promised response",
-		);
-		return this.axiosPaystackClient.post<ResponseDataT<PlanCreateResponseDataT>>(PLAN_PATH, bodyParams);
+		this.logger?.info("create => returning promise to create plan");
+		this.logger?.warn("create => handle error for returned promised response");
+		return this.axiosPaystackClient.post<
+			ResponseDataT<PlanCreateResponseDataT>
+		>(PLAN_PATH, bodyParams);
 	}
 
 	// #region list
@@ -77,11 +82,14 @@ export class Plan {
 	 * @returns axios response
 	 */
 	list(pathParams?: PlanListQueryParamsT) {
-		this.logger?.info("plan.list: returning promise to list plans");
-		this.logger?.warn("plan.list: handle error from promise");
-		return this.axiosPaystackClient.get<PaginatedResponseT<PlanResponseDataT>>(PLAN_PATH, {
-			params: pathParams
-		})
+		this.logger?.info("list => returning promise to list plans");
+		this.logger?.warn("list => handle error from promise");
+		return this.axiosPaystackClient.get<PaginatedResponseT<PlanResponseDataT>>(
+			PLAN_PATH,
+			{
+				params: pathParams,
+			},
+		);
 	}
 
 	// #region fetch
@@ -89,20 +97,27 @@ export class Plan {
 	 * # [Fetch Plan](https://paystack.com/docs/api/plan/#fetch)
 	 * Get details of a plan on your integration.
 	 * @param idOrCode the plan ID or code you want to fetch
-	 * @returns axios response
+	 * @returns Axios response
 	 */
 	fetch(idOrCode: string) {
-		this.logger?.info("plan.fetch: returning promise to fetch a plan");
-		this.logger?.warn("plan.fetch: handle error from promise");
-		return this.axiosPaystackClient
-			.get<ResponseDataT<PlanResponseDataT>>(`${PLAN_PATH}/${idOrCode}`)
+		this.logger?.info("fetch => returning promise to fetch a plan");
+		this.logger?.warn("fetch => handle error from promise");
+		return this.axiosPaystackClient.get<ResponseDataT<PlanResponseDataT>>(
+			`${PLAN_PATH}/${idOrCode}`,
+		);
 	}
 
 	// #region update
+	/**
+	 * # [Update Plan](https://paystack.com/docs/api/plan/#update)
+	 * Update a plan details on your integration
+	 * @param idOrCode plan's ID or code
+	 * @param bodyParams request body parameters
+	 * @returns Axios response
+	 */
 	update(idOrCode: string, bodyParams: PlanBodyParamsT) {
-		this.logger?.info("plan.update: returning promise to update plan")
-		this.logger?.warn("plan.update: handle error from promise")
-		return this.axiosPaystackClient
-			.put(`${PLAN_PATH}/${idOrCode}`, bodyParams)
+		this.logger?.info("update => returning promise to update plan");
+		this.logger?.warn("update => handle error from promise");
+		return this.axiosPaystackClient.put(`${PLAN_PATH}/${idOrCode}`, bodyParams);
 	}
 }

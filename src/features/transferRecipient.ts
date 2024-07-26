@@ -1,45 +1,44 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { type AxiosInstance } from "axios";
+import type { Logger } from "pino";
 import {
 	PAYSTACK_BASE_URL,
-	TRANSFER_RECIPIENT_PATH,
 	TRANSFER_RECIPIENT_BULK_CREATE_PATH,
+	TRANSFER_RECIPIENT_PATH,
 } from "../../config";
-import {
-	GetTransferRecipientBodyParamsT,
-	TransferRecipientBulkCreateBodyParamsT,
-	TransferRecipientBulkCreateResponseDataT,
-	TransferRecipientResponseDataT,
-} from "../types/transfer_recipient_types";
-import {
+import createLogger from "../logger";
+import type {
 	ListQueryParamsT,
 	PaginatedResponseT,
 	RecipientOptionT,
 	ResponseDataT,
 	StatusAndMessageT,
 } from "../types/global";
-import { OptionT } from "../types/global";
-import createLogger from "../logger";
-import { Logger } from "pino";
+import type { OptionT } from "../types/global";
+import type {
+	GetTransferRecipientBodyParamsT,
+	TransferRecipientBulkCreateBodyParamsT,
+	TransferRecipientBulkCreateResponseDataT,
+	TransferRecipientResponseDataT,
+} from "../types/transfer_recipient_types";
 
 /**
  * # [Paystack Transfer Recipient API](https://paystack.com/docs/api/transfer-recipient)
  * The Transfer Recipients API allows you create and manage beneficiaries that you send money to.
- *
- * * ## Note
- * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
- * 
- * ## Info
- * * `perPage` and `page` has value `50` and `1` respectively.
- * 
- * ## Features To Do
- * - [x] Transfer recipient create
- * - [x] Transfer recipient bulk create
- * - [x] Transfer recipient list
- * - [x] Transfer recipient fetch one
- * - [x] Transfer recipient update
- */
+*
+* ## Features
+* - [x] Transfer recipient create
+* - [x] Transfer recipient bulk create
+* - [x] Transfer recipient list
+* - [x] Transfer recipient fetch one
+* - [x] Transfer recipient update
+*
+* ## Info
+* * `perPage` and `page` has value `50` and `1` respectively.
+*
+* * ## Note
+* ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
+*/
 export class TransferRecipient {
-	// #region constructor
 	/**
 	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
 	 *
@@ -53,14 +52,18 @@ export class TransferRecipient {
 	 */
 	readonly axiosPaystackClient: AxiosInstance;
 
+	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
 			this.logger = createLogger("Transfer Recipient");
 
-			this.logger?.info("constructor => setting and adding log level (%s) -> logLevel",	option.logLevel);
+			this.logger?.info(
+				"constructor => setting and adding log level (%s) -> logLevel",
+				option.logLevel,
+			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-		
+
 		this.logger?.info(
 			"constructor => adding custom Axios client -> axiosPaystackClient",
 		);
@@ -79,14 +82,12 @@ export class TransferRecipient {
 	 * @return response data
 	 */
 	create<T extends RecipientOptionT>(
-		requestBody: GetTransferRecipientBodyParamsT<T>
+		requestBody: GetTransferRecipientBodyParamsT<T>,
 	) {
 		this.logger?.info(
-			"create => returning promise to create a transfer recipient"
+			"create => returning promise to create a transfer recipient",
 		);
-		this.logger?.warn(
-			"create => handle error for this promised response"
-		);
+		this.logger?.warn("create => handle error for this promised response");
 		return this.axiosPaystackClient.post<
 			ResponseDataT<TransferRecipientResponseDataT>
 		>(TRANSFER_RECIPIENT_PATH, requestBody);
@@ -103,10 +104,10 @@ export class TransferRecipient {
 	 */
 	bulkCreate(requestBody: TransferRecipientBulkCreateBodyParamsT) {
 		this.logger?.info(
-			"bulkCreate => returning promise to bulk create transfer recipient"
+			"bulkCreate => returning promise to bulk create transfer recipient",
 		);
 		this.logger?.warn(
-			"bulkCreate => handle error for returned promised response"
+			"bulkCreate => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient.post<
 			ResponseDataT<TransferRecipientBulkCreateResponseDataT>
@@ -122,12 +123,8 @@ export class TransferRecipient {
 	 * @return paginated list
 	 */
 	list(params?: ListQueryParamsT) {
-		this.logger?.info(
-			"list => returning promise to list transfer recipients"
-		);
-		this.logger?.warn(
-			"list => handle error for returned promised response"
-		);
+		this.logger?.info("list => returning promise to list transfer recipients");
+		this.logger?.warn("list => handle error for returned promised response");
 
 		return this.axiosPaystackClient.get<
 			PaginatedResponseT<TransferRecipientResponseDataT>
@@ -145,11 +142,9 @@ export class TransferRecipient {
 	fetch(idOrCode: string) {
 		this.logger?.info(
 			"fetch => returning promise to fetch one transfer recipient (parameter: %s)",
-			idOrCode
+			idOrCode,
 		);
-		this.logger?.warn(
-			"fetch => handle error for returned promise"
-		);
+		this.logger?.warn("fetch => handle error for returned promise");
 		return this.axiosPaystackClient.get<
 			ResponseDataT<TransferRecipientResponseDataT>
 		>(`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`);
@@ -167,11 +162,9 @@ export class TransferRecipient {
 	update(idOrCode: string, update: Record<"name" | "email", string>) {
 		this.logger?.info(
 			"update => returning promise to update a transfer recipient (parameter: %s",
-			idOrCode
+			idOrCode,
 		);
-		this.logger?.warn(
-			"update => handle error for returned promise"
-		);
+		this.logger?.warn("update => handle error for returned promise");
 		return this.axiosPaystackClient.put<
 			ResponseDataT<TransferRecipientResponseDataT>
 		>(`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`, update);
@@ -188,13 +181,11 @@ export class TransferRecipient {
 	delete(idOrCode: string) {
 		this.logger?.info(
 			"delete => returning promise to delete a transfer recipient (parameter: %s",
-			idOrCode
+			idOrCode,
 		);
-		this.logger?.warn(
-			"delete => handle error for returned promise"
-		);
+		this.logger?.warn("delete => handle error for returned promise");
 		return this.axiosPaystackClient.delete<StatusAndMessageT>(
-			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`
+			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`,
 		);
 	}
 }

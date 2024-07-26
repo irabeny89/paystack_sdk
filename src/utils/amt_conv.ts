@@ -11,7 +11,7 @@
  * @return {number} amount sub unit value
  */
 export function convertToSubUnit(amount: number): number {
-  return amount * 100;
+	return amount * 100;
 }
 
 /**
@@ -27,5 +27,5 @@ export function convertToSubUnit(amount: number): number {
  * @return {number} amount in main unit
  */
 export function convertToMainUnit(amountInSubUnit: number): number {
-  return amountInSubUnit * 0.01;
+	return amountInSubUnit * 0.01;
 }
