@@ -1,6 +1,3 @@
-import axios, { type AxiosInstance } from "axios";
-import type { Logger } from "pino";
-import { PAYSTACK_BASE_URL } from "../config";
 import { Plan, Transaction, Transfer, TransferRecipient } from "./features";
 import createLogger from "./logger";
 import type { OptionT } from "./types/global";
