@@ -129,3 +129,11 @@ export type SubscriptionT = {
 	next_payment_date: string;
 	open_invoice?: unknown | null;
 } & IdAndTimestampsT;
+
+export type ApiError = {
+  status: boolean
+  message: string
+  meta: Record<"nextStep", string>
+  type: string
+  code: string
+}

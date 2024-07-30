@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { PAYSTACK_BASE_URL } from "../config";
+import { TRANSFER_PATH } from "../config";
 import Paystack from "../src";
 import type { OptionT } from "../src/types/global";
 
@@ -25,10 +25,31 @@ describe("Paystack", () => {
 		expect(transferRecipient.logLevel).toBe(logLevel);
 	});
 
-	test("should have Axios instance with Paystack base URL", () => {
-		expect(paystack.axiosPaystackClient).toBeDefined();
-		expect(paystack.axiosPaystackClient.getUri()).toBe(PAYSTACK_BASE_URL);
-	});
+	test("should have api client", async () => {
+		expect(paystack.apiClient).toBeDefined()
+	})
+
+	test("should have get method in api client", () => {
+		expect(paystack.apiClient.get).toBeDefined()
+	})
+
+	test("should throw not found error on invalid path", async () => {
+		const errorMessage = "Not Found"
+		try {
+			await paystack.apiClient.get("/invalid")
+		} catch (error: any) {
+			expect(error.message).toBe(errorMessage)
+		}
+	})
+
+	test("should throw unauthorized error on invalid secret", async () => {
+		const errorMessage = "Unauthorized"
+		try {
+			await paystack.apiClient.get(TRANSFER_PATH)
+		} catch (error: any) {
+			expect(error.message).toBe(errorMessage)
+		}
+	})
 
 	test("should have Paystack transaction object property defined", () => {
 		expect(paystack.transaction).toBeDefined();

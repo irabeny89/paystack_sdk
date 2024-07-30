@@ -4,6 +4,7 @@ import { PAYSTACK_BASE_URL } from "../config";
 import { Plan, Transaction, Transfer, TransferRecipient } from "./features";
 import createLogger from "./logger";
 import type { OptionT } from "./types/global";
+import createApiClient from "./utils/api_client";
 
 export { Transaction, Transfer, TransferRecipient } from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
@@ -26,14 +27,12 @@ export default class Paystack {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel: OptionT["logLevel"];
+	readonly logLevel;
 
-	readonly logger: Logger<never> | undefined;
+	readonly logger;
 
-	/**
-	 * Axios instance pre-configured with secret to query the Paystack API directly.
-	 */
-	readonly axiosPaystackClient: AxiosInstance;
+	/** pre-configured with Paystack secret and base url */
+	readonly apiClient;
 
 	// #region transaction
 	/**
@@ -120,14 +119,8 @@ export default class Paystack {
 			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-
-		this.logger?.info(
-			"constructor => adding custom Axios client -> axiosPaystackClient",
-		);
-		this.axiosPaystackClient = axios.create({
-			headers: { Authorization: `Bearer ${paystackSecret}` },
-			baseURL: PAYSTACK_BASE_URL,
-		});
+		this.logger?.info("constructor => adding API client -> apiClient")
+		this.apiClient = createApiClient(paystackSecret)
 
 		this.logger?.info(
 			"constructor => adding Transaction instance -> transaction",
