@@ -24,20 +24,20 @@ import type {
 /**
  * # [Paystack Transfer Recipient API](https://paystack.com/docs/api/transfer-recipient)
  * The Transfer Recipients API allows you create and manage beneficiaries that you send money to.
-*
-* ## Features
-* - [x] Transfer recipient create
-* - [x] Transfer recipient bulk create
-* - [x] Transfer recipient list
-* - [x] Transfer recipient fetch one
-* - [x] Transfer recipient update
-*
-* ## Info
-* * `perPage` and `page` has value `50` and `1` respectively.
-*
-* * ## Note
-* ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
-*/
+ *
+ * ## Features
+ * - [x] Transfer recipient create
+ * - [x] Transfer recipient bulk create
+ * - [x] Transfer recipient list
+ * - [x] Transfer recipient fetch one
+ * - [x] Transfer recipient update
+ *
+ * ## Info
+ * * `perPage` and `page` has value `50` and `1` respectively.
+ *
+ * * ## Note
+ * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
+ */
 export class TransferRecipient {
 	/**
 	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.

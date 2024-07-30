@@ -33,14 +33,14 @@ import type {
  * - [x] List Transfers
  * - [x] Fetch One Transfer
  * - [x] Verify Transfer
- * 
+ *
  * * ## Info
  * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
  * * `perPage` and `page` has default values `50` and `1` respectively.
  * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
  *
  * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
- * 
+ *
  * ## Note
  * ! Create a transfer recipient first because data from that will be used here.
  * ! Disable the transfer OTP requirement to use `initiateBulk` method.

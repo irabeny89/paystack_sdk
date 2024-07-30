@@ -34,7 +34,7 @@ import type {
 /**
  * # [Paystack Transaction API](https://paystack.com/docs/api/transaction)
  * The transactions API allows you to create and manage payments on your integration.
- * 
+ *
  * ## Features
  * - [x] check and set log level.
  * - [x] Axios client pre-configured to connect to Paystack.
@@ -47,14 +47,14 @@ import type {
  * - [x] Total amount received.
  * - [x] Export transaction records (currently as CSV file).
  * - [x] Partial debiting of customers.
- * 
+ *
  * ## Info
  * * There are utility functions to handle `amount` conversions i.e `convertToSubUnit` and `convertToMainUnit`.
  * * `perPage` and `page` has default values `50` and `1` respectively.
  * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
  *
  * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
- * 
+ *
  * ## Note
  * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.
  * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.
