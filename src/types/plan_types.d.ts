@@ -4,8 +4,8 @@ import type {
 	IdAndTimestampsT,
 	IntervalOptionT,
 	ListQueryParamsT,
-	SubscriptionT,
 } from "./global";
+import { SubscriptionT } from "./subscription_types";
 
 export type PlanBodyParamsT = {
 	/** Name of plan. */
