@@ -96,7 +96,7 @@ export class Subscription {
 		this.logger?.info("fetch => sending request to fetch subscription");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
-			{ path: `/:${idOrCode}` },
+			{ path: `/${idOrCode}` },
 		);
 	}
 
@@ -133,7 +133,7 @@ export class Subscription {
 			"generateUpdateLink => sending request to generate subscription card update link",
 		);
 		return this.apiClient.get(SUBSCRIPTION_PATH, {
-			path: `/:${code}/manage/link`,
+			path: `/${code}/manage/link`,
 		});
 	}
 
@@ -148,7 +148,7 @@ export class Subscription {
 			"sendUpdateLink => sending request to send subscription card update email",
 		);
 		return this.apiClient.get(SUBSCRIPTION_PATH, {
-			path: `/:${code}/manage/email`,
+			path: `/${code}/manage/email`,
 		});
 	}
 }

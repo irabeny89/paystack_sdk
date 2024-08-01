@@ -5,7 +5,7 @@ import type {
 	IntervalOptionT,
 	ListQueryParamsT,
 } from "./global";
-import { SubscriptionT } from "./subscription_types";
+import type { SubscriptionT } from "./subscription_types";
 
 export type PlanBodyParamsT = {
 	/** Name of plan. */
@@ -26,9 +26,10 @@ export type PlanBodyParamsT = {
 	invoice_limit?: number;
 };
 
-export type PlanCreateResponseDataT = {
+export type PlanDataT = {
 	name: string;
 	amount: number;
+	description?: string | null;
 	interval: IntervalOptionT;
 	integration: number;
 	domain: DomainOptionT;
@@ -36,6 +37,9 @@ export type PlanCreateResponseDataT = {
 	send_invoices: boolean;
 	send_sms: boolean;
 	hosted_page: boolean;
+	hosted_page_url: string | null;
+	hosted_page_summary: string | null;
+	migrate: string | null;
 	currency: CurrencyOptionT;
 } & IdAndTimestampsT;
 

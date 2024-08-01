@@ -6,7 +6,7 @@ import type {
 	RecipientOptionT,
 } from "./global";
 
-type TransferRecipientDetailT = {
+type DetailT = {
 	authorization_code?: null;
 	account_number: string;
 	account_name: string;
@@ -14,7 +14,7 @@ type TransferRecipientDetailT = {
 	bank_name: string;
 };
 
-export type TransferRecipientNubanOrBasaBodyParamsT = {
+type NubanOrBasaBodyParamsT = {
 	/** recipient type: `nuban`, `basa`, or `mobile_money`.
 	 * `nuban` for Nigeria, `mobile_money` for Ghana and `basa` for S.Africa.
 	 */
@@ -35,25 +35,20 @@ export type TransferRecipientNubanOrBasaBodyParamsT = {
 	metadata?: MetaDataT;
 };
 
-export type TransferRecipientMobileMoneyBodyParamsT = Omit<
-	TransferRecipientNubanOrBasaBodyParamsT,
+type MobileMoneyBodyParamsT = Omit<
+	NubanOrBasaBodyParamsT,
 	"bank_code" | "account_number" | "type"
 > &
 	Record<"type", "mobile_money">;
 
-export type GetTransferRecipientBodyParamsT<T extends RecipientOptionT> =
-	T extends "mobile_money"
-		? TransferRecipientMobileMoneyBodyParamsT
-		: TransferRecipientNubanOrBasaBodyParamsT;
+export type CreateBodyParamsT<T extends RecipientOptionT> =
+	T extends "mobile_money" ? MobileMoneyBodyParamsT : NubanOrBasaBodyParamsT;
 
-export type TransferRecipientBulkCreateBodyParamsT = {
+export type BulkCreateBodyParamsT = {
 	/** list of transfer recipient object. Each object should contain required fields for recipient type(`nuban`, `basa` or `mobile_money`) option.
 	 * Parameters passed in single create can be used as well.
 	 */
-	batch: (
-		| TransferRecipientMobileMoneyBodyParamsT
-		| TransferRecipientNubanOrBasaBodyParamsT
-	)[];
+	batch: (MobileMoneyBodyParamsT | NubanOrBasaBodyParamsT)[];
 };
 
 export type TransferRecipientResponseDataT = {
@@ -65,12 +60,12 @@ export type TransferRecipientResponseDataT = {
 	currency: CurrencyOptionT;
 	domain: DomainOptionT;
 	is_deleted: boolean;
-	details: TransferRecipientDetailT;
+	details: DetailT;
 	description?: string;
 	metadata?: null | MetaDataT;
 } & IdAndTimestampsT;
 
-export type TransferRecipientBulkCreateResponseDataT = {
+export type BulkCreateResponseDataT = {
 	success: TransferRecipientResponseDataT[];
 	errors: unknown[];
 };

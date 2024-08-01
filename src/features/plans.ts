@@ -9,7 +9,7 @@ import type {
 } from "../types/global";
 import type {
 	PlanBodyParamsT,
-	PlanCreateResponseDataT,
+	PlanDataT,
 	PlanListQueryParamsT,
 	PlanResponseDataT,
 } from "../types/plan_types";
@@ -69,9 +69,10 @@ export class Plan {
 	create(bodyParams: PlanBodyParamsT) {
 		this.logger?.info("create => returning promise to create plan");
 		this.logger?.warn("create => handle error for returned promised response");
-		return this.axiosPaystackClient.post<
-			ResponseDataT<PlanCreateResponseDataT>
-		>(PLAN_PATH, bodyParams);
+		return this.axiosPaystackClient.post<ResponseDataT<PlanDataT>>(
+			PLAN_PATH,
+			bodyParams,
+		);
 	}
 
 	// #region list

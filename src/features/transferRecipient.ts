@@ -1,5 +1,4 @@
-import axios, { type AxiosInstance } from "axios";
-import type { Logger } from "pino";
+import axios from "axios";
 import {
 	PAYSTACK_BASE_URL,
 	TRANSFER_RECIPIENT_BULK_CREATE_PATH,
@@ -15,9 +14,9 @@ import type {
 } from "../types/global";
 import type { OptionT } from "../types/global";
 import type {
-	GetTransferRecipientBodyParamsT,
-	TransferRecipientBulkCreateBodyParamsT,
-	TransferRecipientBulkCreateResponseDataT,
+	BulkCreateBodyParamsT,
+	BulkCreateResponseDataT,
+	CreateBodyParamsT,
 	TransferRecipientResponseDataT,
 } from "../types/transfer_recipient_types";
 
@@ -44,13 +43,13 @@ export class TransferRecipient {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel: OptionT["logLevel"];
+	readonly logLevel;
 
-	readonly logger: Logger<never> | undefined;
+	readonly logger;
 	/**
 	 * Axios instance pre-configured with `secret` key to query the Paystack API.
 	 */
-	readonly axiosPaystackClient: AxiosInstance;
+	readonly axiosPaystackClient;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -78,16 +77,13 @@ export class TransferRecipient {
 	 * # [Create Transfer Recipient](https://paystack.com/docs/api/transfer-recipient/#create)
 	 * Creates a new recipient. A duplicate account number will lead to the retrieval of the existing record.
 	 *
-	 * @param {GetTransferRecipientBodyParamsT<T>} requestBody request body
+	 * @param requestBody request body
 	 * @return response data
 	 */
-	create<T extends RecipientOptionT>(
-		requestBody: GetTransferRecipientBodyParamsT<T>,
-	) {
+	create<T extends RecipientOptionT>(requestBody: CreateBodyParamsT<T>) {
 		this.logger?.info(
 			"create => returning promise to create a transfer recipient",
 		);
-		this.logger?.warn("create => handle error for this promised response");
 		return this.axiosPaystackClient.post<
 			ResponseDataT<TransferRecipientResponseDataT>
 		>(TRANSFER_RECIPIENT_PATH, requestBody);
@@ -99,10 +95,10 @@ export class TransferRecipient {
 	 * Create multiple transfer recipient in batches.
 	 * Duplicate account number will return the old one.
 	 *
-	 * @param {TransferRecipientBulkCreateBodyParamsT} requestBody request body
+	 * @param {BulkCreateBodyParamsT} requestBody request body
 	 * @return response data
 	 */
-	bulkCreate(requestBody: TransferRecipientBulkCreateBodyParamsT) {
+	bulkCreate(requestBody: BulkCreateBodyParamsT) {
 		this.logger?.info(
 			"bulkCreate => returning promise to bulk create transfer recipient",
 		);
@@ -110,7 +106,7 @@ export class TransferRecipient {
 			"bulkCreate => handle error for returned promised response",
 		);
 		return this.axiosPaystackClient.post<
-			ResponseDataT<TransferRecipientBulkCreateResponseDataT>
+			ResponseDataT<BulkCreateResponseDataT>
 		>(TRANSFER_RECIPIENT_BULK_CREATE_PATH, requestBody);
 	}
 
@@ -124,8 +120,6 @@ export class TransferRecipient {
 	 */
 	list(params?: ListQueryParamsT) {
 		this.logger?.info("list => returning promise to list transfer recipients");
-		this.logger?.warn("list => handle error for returned promised response");
-
 		return this.axiosPaystackClient.get<
 			PaginatedResponseT<TransferRecipientResponseDataT>
 		>(TRANSFER_RECIPIENT_PATH, { params });
@@ -144,7 +138,6 @@ export class TransferRecipient {
 			"fetch => returning promise to fetch one transfer recipient (parameter: %s)",
 			idOrCode,
 		);
-		this.logger?.warn("fetch => handle error for returned promise");
 		return this.axiosPaystackClient.get<
 			ResponseDataT<TransferRecipientResponseDataT>
 		>(`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`);
@@ -183,7 +176,6 @@ export class TransferRecipient {
 			"delete => returning promise to delete a transfer recipient (parameter: %s",
 			idOrCode,
 		);
-		this.logger?.warn("delete => handle error for returned promise");
 		return this.axiosPaystackClient.delete<StatusAndMessageT>(
 			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`,
 		);
