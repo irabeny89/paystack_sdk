@@ -28,3 +28,9 @@ export const TRANSFER_FINALIZE_PATH = "/transfer/finalize_transfer";
 export const TRANSFER_INITIATE_BULK_PATH = "/transfer/bulk";
 
 export const PLAN_PATH = "/plan"
+
+export const SUBSCRIPTION_PATH = "/subscription"
+
+export const SUBSCRIPTION_ENABLE_PATH = "/subscription/enable"
+
+export const SUBSCRIPTION_DISABLE_PATH = "/subscription/disable"

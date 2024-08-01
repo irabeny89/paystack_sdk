@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { TRANSFER_PATH } from "../config";
-import createApiClient from "../src/utils/api_client";
+import { PAYSTACK_BASE_URL, TRANSFER_PATH } from "../config";
+import type { ParamsT } from "../src/types/global";
+import createApiClient, {
+	addParamsToUrl,
+	createUrl,
+} from "../src/utils/api_client";
 
 describe("API Client", () => {
 	const SECRET = "asiri";
@@ -10,16 +14,51 @@ describe("API Client", () => {
 		apiClient = createApiClient(SECRET);
 	});
 
-	test("should have api client", async () => {
-		expect(apiClient).toBeDefined();
+	test("should add param with `?` to url", () => {
+		const url = PAYSTACK_BASE_URL;
+		const key = "a";
+		const value = 0;
+
+		const newUrl = addParamsToUrl(url, [key, value], 0);
+
+		expect(newUrl).toBe(`${url}?${key}=${value}`);
 	});
 
-	test("should have get method in api client", () => {
-		expect(apiClient?.get).toBeDefined();
+	test("should add param with `&` to url", () => {
+		const url = PAYSTACK_BASE_URL;
+		const key = "a";
+		const value = 0;
+
+		const newUrl = addParamsToUrl(url, [key, value], 1);
+
+		expect(newUrl).toBe(`${url}&${key}=${value}`);
 	});
 
-	test("should throw not found error on invalid path", async () => {
-		const errorMessage = "Not Found";
+	test("should add path to base url", () => {
+		const path = "/test";
+
+		expect(createUrl(path)).toBe(`${PAYSTACK_BASE_URL}${path}`);
+	});
+
+	test("should add path and param to base url", () => {
+		const path = "/test/";
+		const params = { path: "first" };
+		const url = `${PAYSTACK_BASE_URL}${path}:${params.path}`;
+
+		expect(createUrl(path, params)).toBe(url);
+	});
+
+	test("should add path, path and query params to base url", () => {
+		const path = "/test/";
+		const params: ParamsT = { path: "first", query: { a: 1 } };
+		const query = params.query as Record<"a", number>;
+		const url = `${PAYSTACK_BASE_URL}${path}:${params.path}?${Object.keys(query)[0]}=${query.a}`;
+
+		expect(createUrl(path, params)).toBe(url);
+	});
+
+	test("should throw not found error for get method on invalid path", async () => {
+		const errorMessage = "404: Not Found";
 		try {
 			await apiClient?.get("/invalid");
 		} catch (error: unknown) {
@@ -27,10 +66,28 @@ describe("API Client", () => {
 		}
 	});
 
-	test("should throw unauthorized error on invalid secret", async () => {
-		const errorMessage = "Unauthorized";
+	test("should throw unauthorized error for get method on invalid secret", async () => {
+		const errorMessage = "401: Unauthorized";
 		try {
 			await apiClient?.get(TRANSFER_PATH);
+		} catch (error: unknown) {
+			expect((error as Error).message).toBe(errorMessage);
+		}
+	});
+
+	test("should throw not found error for post method on invalid path", async () => {
+		const errorMessage = "404: Not Found";
+		try {
+			await apiClient?.post("/invalid", {});
+		} catch (error: unknown) {
+			expect((error as Error).message).toBe(errorMessage);
+		}
+	});
+
+	test("should throw unauthorized error for post method on invalid secret", async () => {
+		const errorMessage = "401: Unauthorized";
+		try {
+			await apiClient?.post(TRANSFER_PATH, {});
 		} catch (error: unknown) {
 			expect((error as Error).message).toBe(errorMessage);
 		}

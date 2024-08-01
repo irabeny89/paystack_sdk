@@ -110,22 +110,7 @@ export type AuthorizationT = {
 	signature?: string | null;
 };
 
-export type SubscriptionT = {
-	customer: number;
-	plan: number;
-	integration: number;
-	domain: string;
-	start: number;
-	// TODO: use string union
-	// ? create string union in subscription_type.ts file
-	status: string;
-	quantity: number;
-	amount: number;
-	subscription_code: string;
-	email_token?: string | null;
-	authorization: AuthorizationT;
-	easy_cron_id?: unknown | null;
-	cron_expression?: string;
-	next_payment_date: string;
-	open_invoice?: unknown | null;
-} & IdAndTimestampsT;
+export type ParamsT = {
+	path?: string;
+	query?: { [k: string]: string | number | boolean };
+};
