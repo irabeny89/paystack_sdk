@@ -1,7 +1,5 @@
-import axios, { type AxiosInstance } from "axios";
 import type { Logger } from "pino";
 import {
-	PAYSTACK_BASE_URL,
 	TRANSFER_FINALIZE_PATH,
 	TRANSFER_INITIATE_BULK_PATH,
 	TRANSFER_PATH,
@@ -18,6 +16,7 @@ import type {
 	TransferResponseDataT,
 	VerifyResponseDataT,
 } from "../types/transfer_types";
+import createApiClient from "../utils/api_client";
 
 /**
  * # [Paystack Transfer API](https://paystack.com/docs/api/transfer)
@@ -54,15 +53,14 @@ export class Transfer {
 	readonly logLevel: OptionT["logLevel"];
 
 	readonly logger: Logger<never> | undefined;
-	/**
-	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	 */
-	readonly axiosPaystackClient: AxiosInstance;
+
+	/** pre-configured with Paystack secret and base url */
+	readonly apiClient;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("Transfer");
+			this.logger = createLogger("Subscription");
 
 			this.logger?.info(
 				"constructor => setting and adding log level (%s) -> logLevel",
@@ -71,13 +69,8 @@ export class Transfer {
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		this.logger?.info(
-			"constructor => adding custom Axios client -> axiosPaystackClient",
-		);
-		this.axiosPaystackClient = axios.create({
-			headers: { Authorization: `Bearer ${paystackSecret}` },
-			baseURL: PAYSTACK_BASE_URL,
-		});
+		this.logger?.info("constructor => adding API client -> apiClient");
+		this.apiClient = createApiClient(paystackSecret);
 	}
 
 	// #region initiate
@@ -88,16 +81,15 @@ export class Transfer {
 	 * Status of transfer object returned will be `pending` if OTP is disabled.
 	 * In the event that an OTP is required, status will read `otp`.
 	 *
-	 * @param {InitiateBodyParamsT} body
-	 * @return promised Axios response
+	 * @param body
+	 * @return promise to initiate transfer
 	 */
 	initiate(body: InitiateBodyParamsT) {
 		this.logger?.info(
 			body,
 			"initiate => returning promise to initiate transfer",
 		);
-		this.logger?.warn("initiate => handle error for returned promise.");
-		return this.axiosPaystackClient.post<ResponseDataT<TransferResponseDataT>>(
+		return this.apiClient.post<ResponseDataT<TransferResponseDataT>>(
 			TRANSFER_PATH,
 			body,
 		);
@@ -108,16 +100,15 @@ export class Transfer {
 	 * # [Finalize Transfer](https://paystack.com/docs/api/transfer/#finalize)
 	 * Finalize an initiated transfer.
 	 *
-	 * @param {FinalizeBodyParamsT} body - request body
-	 * @return promise Axios response
+	 * @param body request body
+	 * @return promise to finalize transfer
 	 */
 	finalize(body: FinalizeBodyParamsT) {
 		this.logger?.info(
 			body,
 			"finalize => returning promise to finalize an initiated transfer.",
 		);
-		this.logger?.warn("finalize => handle error returned from promise.");
-		return this.axiosPaystackClient.post<ResponseDataT<TransferResponseDataT>>(
+		return this.apiClient.post<ResponseDataT<TransferResponseDataT>>(
 			TRANSFER_FINALIZE_PATH,
 			body,
 		);
@@ -130,18 +121,18 @@ export class Transfer {
 	 *
 	 * ! You need to disable the Transfers OTP requirement to use this endpoint.
 	 *
-	 * @param {InitiateBulkBodyParamsT} body - request data
-	 * @return promised Axios response
+	 * @param body - request data
+	 * @return promised to initiate bulk transfer
 	 */
 	initiateBulk(body: InitiateBulkBodyParamsT) {
 		this.logger?.info(
 			body,
 			"initiateBulk => returning promise to initiate bulk transfer.",
 		);
-		this.logger?.warn("initiateBulk => handle promise errors");
-		return this.axiosPaystackClient.post<
-			ResponseDataT<InitializeBulkResponseDataT>
-		>(TRANSFER_INITIATE_BULK_PATH, body);
+		return this.apiClient.post<ResponseDataT<InitializeBulkResponseDataT>>(
+			TRANSFER_INITIATE_BULK_PATH,
+			body,
+		);
 	}
 
 	// #region list
@@ -150,16 +141,15 @@ export class Transfer {
 	 * List the transfers made on your integration.
 	 *
 	 * @param params optional query parameters
-	 * @returns promised Axios response
+	 * @returns promised to list transfers
 	 */
-	list(params?: ListTransferQueryParamsT) {
+	list(query?: ListTransferQueryParamsT) {
 		this.logger?.info(
 			"list => returning promise to list transfers on the integration",
 		);
-		this.logger?.warn("list => handle promise errors");
-		return this.axiosPaystackClient.get<ResponseDataT<ListResponseDataT>>(
+		return this.apiClient.get<ResponseDataT<ListResponseDataT>>(
 			TRANSFER_PATH,
-			{ params },
+			query,
 		);
 	}
 
@@ -167,13 +157,12 @@ export class Transfer {
 	/**
 	 * # [Fetch A Transfer](https://paystack.com/docs/api/transfer/#fetch)
 	 * Get details of a transfer on your integration.
-	 * @param {string} idOrCode - transfer id or code
-	 * @return promised Axios response
+	 * @param idOrCode transfer id or code
+	 * @return promise to fetch a transfer
 	 */
 	fetch(idOrCode: string) {
 		this.logger?.info("fetch => returning promise to fetch a transfer");
-		this.logger?.warn("fetch => handle promise errors");
-		return this.axiosPaystackClient.get<ResponseDataT<TransferResponseDataT>>(
+		return this.apiClient.get<ResponseDataT<TransferResponseDataT>>(
 			`${TRANSFER_PATH}/${idOrCode}`,
 		);
 	}
@@ -183,15 +172,14 @@ export class Transfer {
 	 * # [Verify Transfer](https://paystack.com/docs/api/transfer/#verify)
 	 * Verify the status of a transfer on your integration.
 	 * @param reference transfer reference
-	 * @returns promised Axios response
+	 * @returns promise to verify transfer
 	 */
 	verify(reference: string) {
 		this.logger?.info(
 			"verify => returning promise to verify a transfer",
 			reference,
 		);
-		this.logger?.warn("verify => handle promise errors");
-		return this.axiosPaystackClient.get<ResponseDataT<VerifyResponseDataT>>(
+		return this.apiClient.get<ResponseDataT<VerifyResponseDataT>>(
 			`${TRANSFER_PATH}/verify/${reference}`,
 		);
 	}
