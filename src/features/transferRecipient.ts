@@ -1,6 +1,4 @@
-import axios from "axios";
 import {
-	PAYSTACK_BASE_URL,
 	TRANSFER_RECIPIENT_BULK_CREATE_PATH,
 	TRANSFER_RECIPIENT_PATH,
 } from "../../config";
@@ -19,6 +17,7 @@ import type {
 	CreateBodyParamsT,
 	TransferRecipientResponseDataT,
 } from "../types/transfer_recipient_types";
+import createApiClient from "../utils/api_client";
 
 /**
  * # [Paystack Transfer Recipient API](https://paystack.com/docs/api/transfer-recipient)
@@ -46,15 +45,13 @@ export class TransferRecipient {
 	readonly logLevel;
 
 	readonly logger;
-	/**
-	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	 */
-	readonly axiosPaystackClient;
+	/** pre-configured with Paystack secret and base url */
+	readonly apiClient;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("Transfer Recipient");
+			this.logger = createLogger("Subscription");
 
 			this.logger?.info(
 				"constructor => setting and adding log level (%s) -> logLevel",
@@ -63,13 +60,8 @@ export class TransferRecipient {
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		this.logger?.info(
-			"constructor => adding custom Axios client -> axiosPaystackClient",
-		);
-		this.axiosPaystackClient = axios.create({
-			headers: { Authorization: `Bearer ${paystackSecret}` },
-			baseURL: PAYSTACK_BASE_URL,
-		});
+		this.logger?.info("constructor => adding API client -> apiClient");
+		this.apiClient = createApiClient(paystackSecret);
 	}
 
 	// #region create
@@ -78,15 +70,16 @@ export class TransferRecipient {
 	 * Creates a new recipient. A duplicate account number will lead to the retrieval of the existing record.
 	 *
 	 * @param requestBody request body
-	 * @return response data
+	 * @return promise to create transfer recipient
 	 */
 	create<T extends RecipientOptionT>(requestBody: CreateBodyParamsT<T>) {
 		this.logger?.info(
 			"create => returning promise to create a transfer recipient",
 		);
-		return this.axiosPaystackClient.post<
-			ResponseDataT<TransferRecipientResponseDataT>
-		>(TRANSFER_RECIPIENT_PATH, requestBody);
+		return this.apiClient.post<ResponseDataT<TransferRecipientResponseDataT>>(
+			TRANSFER_RECIPIENT_PATH,
+			requestBody,
+		);
 	}
 
 	// #region bulk create
@@ -95,19 +88,17 @@ export class TransferRecipient {
 	 * Create multiple transfer recipient in batches.
 	 * Duplicate account number will return the old one.
 	 *
-	 * @param {BulkCreateBodyParamsT} requestBody request body
-	 * @return response data
+	 * @param requestBody request body
+	 * @return promise to bulk create transfer recipient
 	 */
 	bulkCreate(requestBody: BulkCreateBodyParamsT) {
 		this.logger?.info(
 			"bulkCreate => returning promise to bulk create transfer recipient",
 		);
-		this.logger?.warn(
-			"bulkCreate => handle error for returned promised response",
+		return this.apiClient.post<ResponseDataT<BulkCreateResponseDataT>>(
+			TRANSFER_RECIPIENT_BULK_CREATE_PATH,
+			requestBody,
 		);
-		return this.axiosPaystackClient.post<
-			ResponseDataT<BulkCreateResponseDataT>
-		>(TRANSFER_RECIPIENT_BULK_CREATE_PATH, requestBody);
 	}
 
 	// #region list
@@ -115,14 +106,14 @@ export class TransferRecipient {
 	 * # [List Transfer Recipients](https://paystack.com/docs/api/transfer-recipient/#list)
 	 * List transfer recipients available on your integration.
 	 *
-	 * @param {ListQueryParamsT} [params] - query parameters
-	 * @return paginated list
+	 * @param query - query parameters
+	 * @return promise to list transfer recipient
 	 */
-	list(params?: ListQueryParamsT) {
+	list(query?: ListQueryParamsT) {
 		this.logger?.info("list => returning promise to list transfer recipients");
-		return this.axiosPaystackClient.get<
+		return this.apiClient.get<
 			PaginatedResponseT<TransferRecipientResponseDataT>
-		>(TRANSFER_RECIPIENT_PATH, { params });
+		>(TRANSFER_RECIPIENT_PATH, query);
 	}
 
 	// #region fetch
@@ -130,17 +121,17 @@ export class TransferRecipient {
 	 * # [Fetch Transfer Recipient](https://paystack.com/docs/api/transfer-recipient/#fetch)
 	 * Fetch details of a transfer recipient.
 	 *
-	 * @param {string} idOrCode - id or code of the recipient
-	 * @return transfer recipient response data
+	 * @param idOrCode - id or code of the recipient
+	 * @return promise to fetch transfer recipient
 	 */
 	fetch(idOrCode: string) {
 		this.logger?.info(
 			"fetch => returning promise to fetch one transfer recipient (parameter: %s)",
 			idOrCode,
 		);
-		return this.axiosPaystackClient.get<
-			ResponseDataT<TransferRecipientResponseDataT>
-		>(`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`);
+		return this.apiClient.get<ResponseDataT<TransferRecipientResponseDataT>>(
+			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`,
+		);
 	}
 
 	// #region update
@@ -148,19 +139,19 @@ export class TransferRecipient {
 	 * # [Update Transfer Recipient](https://paystack.com/docs/api/transfer-recipient/#update)
 	 * Update a transfer recipient already available on your integration.
 	 *
-	 * @param {string} idOrCode - id or code of the transfer recipient
-	 * @param {(Record<"name" | "email", string>)} update the new data to swap
-	 * @return transfer recipient response data
+	 * @param idOrCode id or code of the transfer recipient
+	 * @param update the new data to swap
+	 * @return promise to update transfer recipient
 	 */
 	update(idOrCode: string, update: Record<"name" | "email", string>) {
 		this.logger?.info(
-			"update => returning promise to update a transfer recipient (parameter: %s",
+			"update => returning promise to update a transfer recipient - %s",
 			idOrCode,
 		);
-		this.logger?.warn("update => handle error for returned promise");
-		return this.axiosPaystackClient.put<
-			ResponseDataT<TransferRecipientResponseDataT>
-		>(`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`, update);
+		return this.apiClient.put<ResponseDataT<TransferRecipientResponseDataT>>(
+			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`,
+			update,
+		);
 	}
 
 	// #region delete
@@ -176,7 +167,7 @@ export class TransferRecipient {
 			"delete => returning promise to delete a transfer recipient (parameter: %s",
 			idOrCode,
 		);
-		return this.axiosPaystackClient.delete<StatusAndMessageT>(
+		return this.apiClient.delete<StatusAndMessageT>(
 			`${TRANSFER_RECIPIENT_PATH}/${idOrCode}`,
 		);
 	}

@@ -36,6 +36,24 @@ const createPost =
 		);
 	};
 
+const createPut =
+	(headers: Headers) =>
+	async <R = unknown, B = unknown>(path: string, body: B) => {
+		return getData<R>(
+			await fetch(`${PAYSTACK_BASE_URL}${path}`, {
+				method: "PUT",
+				headers,
+				body: JSON.stringify(body),
+			}),
+		);
+	};
+
+const createDelete =
+	(headers: Headers) =>
+	async <R = unknown, B = unknown>(path: string) => {
+		return getData<R>(await fetch(createUrl(path), { headers }));
+	};
+
 export default function createApiClient(paystackSecret: string) {
 	const headers = new Headers({
 		Authorization: `Bearer ${paystackSecret}`,
@@ -44,5 +62,7 @@ export default function createApiClient(paystackSecret: string) {
 	return {
 		get: createGet(headers),
 		post: createPost(headers),
+		put: createPut(headers),
+		delete: createDelete(headers),
 	};
 }
