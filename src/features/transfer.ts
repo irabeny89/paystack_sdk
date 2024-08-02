@@ -143,13 +143,13 @@ export class Transfer {
 	 * @param params optional query parameters
 	 * @returns promised to list transfers
 	 */
-	list(query?: ListTransferQueryParamsT) {
+	list(params?: ListTransferQueryParamsT) {
 		this.logger?.info(
 			"list => returning promise to list transfers on the integration",
 		);
 		return this.apiClient.get<ResponseDataT<ListResponseDataT>>(
 			TRANSFER_PATH,
-			query,
+			params,
 		);
 	}
 

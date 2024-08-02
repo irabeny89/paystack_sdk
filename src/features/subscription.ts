@@ -82,11 +82,11 @@ export class Subscription {
 	 * @param params path params
 	 * @returns promise to list subscriptions
 	 */
-	list(query: ListQueryParamsT) {
+	list(params: ListQueryParamsT) {
 		this.logger?.info("list => sending request to list subscriptions");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
-			query,
+			params,
 		);
 	}
 
