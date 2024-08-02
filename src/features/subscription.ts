@@ -32,6 +32,11 @@ import createApiClient from "../utils/api_client";
  * - [x] Send email to update subscription link
  */
 export class Subscription {
+	/**
+	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
+	 *
+	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
+	 */
 	readonly logLevel;
 
 	readonly logger;

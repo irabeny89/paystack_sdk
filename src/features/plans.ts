@@ -32,7 +32,12 @@ import type {
  * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
  */
 export class Plan {
-	readonly logLevel: OptionT["logLevel"];
+	/**
+	 * Debug levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
+	 *
+	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
+	 */
+	readonly logLevel;
 
 	readonly logger: Logger<never> | undefined;
 	/**
