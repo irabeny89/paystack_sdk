@@ -51,7 +51,7 @@ export class TransferRecipient {
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("Subscription");
+			this.logger = createLogger("Transfer Recipient");
 
 			this.logger?.info(
 				"constructor => setting and adding log level (%s) -> logLevel",
