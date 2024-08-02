@@ -81,7 +81,7 @@ export class Subscription {
 		this.logger?.info("list => sending request to list subscriptions");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
-			{ query },
+			query,
 		);
 	}
 
@@ -132,9 +132,7 @@ export class Subscription {
 		this.logger?.info(
 			"generateUpdateLink => sending request to generate subscription card update link",
 		);
-		return this.apiClient.get(SUBSCRIPTION_PATH, {
-			path: `/${code}/manage/link`,
-		});
+		return this.apiClient.get(`${SUBSCRIPTION_PATH}/${code}/manage/link`);
 	}
 
 	// #region send update link
@@ -147,8 +145,6 @@ export class Subscription {
 		this.logger?.info(
 			"sendUpdateLink => sending request to send subscription card update email",
 		);
-		return this.apiClient.get(SUBSCRIPTION_PATH, {
-			path: `/${code}/manage/email`,
-		});
+		return this.apiClient.get(`${SUBSCRIPTION_PATH}/${code}/manage/email`);
 	}
 }

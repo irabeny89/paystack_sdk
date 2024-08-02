@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { PAYSTACK_BASE_URL, TRANSFER_PATH } from "../config";
-import type { ParamsT } from "../src/types/global";
 import createApiClient, {
 	addParamsToUrl,
 	createUrl,
@@ -40,21 +39,12 @@ describe("API Client", () => {
 		expect(createUrl(path)).toBe(`${PAYSTACK_BASE_URL}${path}`);
 	});
 
-	test("should add path and param to base url", () => {
-		const path = "/test/";
-		const params = { path: "first" };
-		const url = `${PAYSTACK_BASE_URL}${path}:${params.path}`;
-
-		expect(createUrl(path, params)).toBe(url);
-	});
-
 	test("should add path, path and query params to base url", () => {
-		const path = "/test/";
-		const params: ParamsT = { path: "first", query: { a: 1 } };
-		const query = params.query as Record<"a", number>;
-		const url = `${PAYSTACK_BASE_URL}${path}:${params.path}?${Object.keys(query)[0]}=${query.a}`;
+		const path = "/test";
+		const query = { a: 1 };
+		const url = `${PAYSTACK_BASE_URL}${path}?${Object.keys(query)[0]}=${query.a}`;
 
-		expect(createUrl(path, params)).toBe(url);
+		expect(createUrl(path, query)).toBe(url);
 	});
 
 	test("should throw not found error for get method on invalid path", async () => {

@@ -110,7 +110,6 @@ export type AuthorizationT = {
 	signature?: string | null;
 };
 
-export type ParamsT = {
-	path?: string;
-	query?: { [k: string]: string | number | boolean };
+export type QueryT = {
+	[k: string]: string | number | boolean;
 };

@@ -1,5 +1,5 @@
 import { PAYSTACK_BASE_URL } from "../../config";
-import type { ParamsT } from "../types/global";
+import type { QueryT } from "../types/global";
 
 const getData = async <T>(res: Response) => {
 	if (res.ok) return res.json<T>();
@@ -11,21 +11,17 @@ export const addParamsToUrl = (url: string, entry: unknown[], index: number) =>
 		? `${url}?${entry[0]}=${entry[1]}`
 		: `${url}&${entry[0]}=${entry[1]}`;
 
-export const createUrl = (path: string, params?: ParamsT) => {
+export const createUrl = (path: string, query?: QueryT) => {
 	let url = `${PAYSTACK_BASE_URL}${path}`;
-	// ? handle path params first
-	if (params?.path) url = `${url}${params.path}`;
-	// ? then handle query params
-	if (params?.query)
-		url = Object.entries(params.query).reduce(addParamsToUrl, url);
+	if (query) url = Object.entries(query).reduce(addParamsToUrl, url);
 
 	return url;
 };
 
 const createGet =
 	(headers: Headers) =>
-	async <R = unknown>(path: string, params?: ParamsT) => {
-		return getData<R>(await fetch(createUrl(path, params), { headers }));
+	async <R = unknown>(path: string, query?: QueryT) => {
+		return getData<R>(await fetch(createUrl(path, query), { headers }));
 	};
 
 const createPost =
