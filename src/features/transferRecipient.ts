@@ -106,7 +106,7 @@ export class TransferRecipient {
 	 * # [List Transfer Recipients](https://paystack.com/docs/api/transfer-recipient/#list)
 	 * List transfer recipients available on your integration.
 	 *
-	 * @param query - query parameters
+	 * @param query  query parameters
 	 * @return promise to list transfer recipient
 	 */
 	list(query?: ListQueryParamsT) {
@@ -159,7 +159,7 @@ export class TransferRecipient {
 	 * # [Delete Transfer Recipient](https://paystack.com/docs/api/transfer-recipient/#delete)
 	 * Delete a transfer recipient by actually setting the transfer recipient to `inactive`.
 	 *
-	 * @param {string} idOrCode - id or code of the transfer recipient
+	 * @param idOrCode - id or code of the transfer recipient
 	 * @return transfer recipient response data
 	 */
 	delete(idOrCode: string) {
