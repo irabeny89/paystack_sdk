@@ -102,6 +102,7 @@ export class Subscription {
 
 	// #region enable
 	/**
+	 * # [Enable Subscription](https://paystack.com/docs/api/subscription/#enable)
 	 * Enable subscription on your integration.
 	 * @param body body parameter
 	 * @returns promise to enable subscription
@@ -113,6 +114,7 @@ export class Subscription {
 
 	// #region disable
 	/**
+	 * # [Disable Subscription](https://paystack.com/docs/api/subscription/#disable)
 	 * Disable subscription on your integration.
 	 * @param body body parameter
 	 * @returns promise to disable subscription
@@ -124,6 +126,7 @@ export class Subscription {
 
 	// #region generate update link
 	/**
+	 * # [Generate Update Subscription Link](https://paystack.com/docs/api/subscription/#manage-link)
 	 * Generate a link for updating the card on a subscription.
 	 * @param code subscription code
 	 * @returns promise to generate link to update subscription card
@@ -137,6 +140,7 @@ export class Subscription {
 
 	// #region send update link
 	/**
+	 * # [Send Update Subscription Link](https://paystack.com/docs/api/subscription/#manage-email)
 	 * Email a customer a link for updating the card on their subscription.
 	 * @param code subscription code
 	 * @returns promise to send email to update subscription card
