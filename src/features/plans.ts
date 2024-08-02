@@ -1,6 +1,4 @@
-import axios, { type AxiosInstance } from "axios";
-import type { Logger } from "pino";
-import { PAYSTACK_BASE_URL, PLAN_PATH } from "../../config";
+import { PLAN_PATH } from "../../config";
 import createLogger from "../logger";
 import type {
 	OptionT,
@@ -13,6 +11,7 @@ import type {
 	PlanListQueryParamsT,
 	PlanResponseDataT,
 } from "../types/plan_types";
+import createApiClient from "../utils/api_client";
 
 /**
  * # [Paystack Plans API](https://paystack.com/docs/api/plan)
@@ -39,29 +38,21 @@ export class Plan {
 	 */
 	readonly logLevel;
 
-	readonly logger: Logger<never> | undefined;
-	/**
-	 * Axios instance pre-configured with `secret` key to query the Paystack API.
-	 */
-	readonly axiosPaystackClient: AxiosInstance;
+	readonly logger;
+
+	/** pre-configured with Paystack secret and base url */
+	readonly apiClient;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("Transaction");
+			this.logger = createLogger("Plan");
 
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		this.logger?.info(
-			"constructor => creating Axios instance with (%s)",
-			PAYSTACK_BASE_URL,
-		);
-		this.axiosPaystackClient = axios.create({
-			headers: { Authorization: `Bearer ${paystackSecret}` },
-			baseURL: PAYSTACK_BASE_URL,
-		});
-		this.logger?.info("constructor => created Axios instance");
+		this.logger?.info("constructor => adding API client -> apiClient");
+		this.apiClient = createApiClient(paystackSecret);
 	}
 
 	// #region create
@@ -69,15 +60,11 @@ export class Plan {
 	 * # [Create Plan](https://paystack.com/docs/api/plan/#create)
 	 * Create a plan on your integration.
 	 * @param bodyParams request body params
-	 * @returns axios response
+	 * @returns promise to create plan
 	 */
 	create(bodyParams: PlanBodyParamsT) {
 		this.logger?.info("create => returning promise to create plan");
-		this.logger?.warn("create => handle error for returned promised response");
-		return this.axiosPaystackClient.post<ResponseDataT<PlanDataT>>(
-			PLAN_PATH,
-			bodyParams,
-		);
+		return this.apiClient.post<ResponseDataT<PlanDataT>>(PLAN_PATH, bodyParams);
 	}
 
 	// #region list
@@ -85,16 +72,13 @@ export class Plan {
 	 * # [List Plan](https://paystack.com/docs/api/plan/#list)
 	 * List plans available on your integration.
 	 * @param pathParams path parameters
-	 * @returns axios response
+	 * @returns promise to list plans
 	 */
 	list(pathParams?: PlanListQueryParamsT) {
 		this.logger?.info("list => returning promise to list plans");
-		this.logger?.warn("list => handle error from promise");
-		return this.axiosPaystackClient.get<PaginatedResponseT<PlanResponseDataT>>(
+		return this.apiClient.get<PaginatedResponseT<PlanResponseDataT>>(
 			PLAN_PATH,
-			{
-				params: pathParams,
-			},
+			pathParams,
 		);
 	}
 
@@ -103,12 +87,11 @@ export class Plan {
 	 * # [Fetch Plan](https://paystack.com/docs/api/plan/#fetch)
 	 * Get details of a plan on your integration.
 	 * @param idOrCode the plan ID or code you want to fetch
-	 * @returns Axios response
+	 * @returns promise to fetch plan
 	 */
 	fetch(idOrCode: string) {
 		this.logger?.info("fetch => returning promise to fetch a plan");
-		this.logger?.warn("fetch => handle error from promise");
-		return this.axiosPaystackClient.get<ResponseDataT<PlanResponseDataT>>(
+		return this.apiClient.get<ResponseDataT<PlanResponseDataT>>(
 			`${PLAN_PATH}/${idOrCode}`,
 		);
 	}
@@ -119,11 +102,10 @@ export class Plan {
 	 * Update a plan details on your integration
 	 * @param idOrCode plan's ID or code
 	 * @param bodyParams request body parameters
-	 * @returns Axios response
+	 * @returns promise to update plan
 	 */
 	update(idOrCode: string, bodyParams: PlanBodyParamsT) {
 		this.logger?.info("update => returning promise to update plan");
-		this.logger?.warn("update => handle error from promise");
-		return this.axiosPaystackClient.put(`${PLAN_PATH}/${idOrCode}`, bodyParams);
+		return this.apiClient.put(`${PLAN_PATH}/${idOrCode}`, bodyParams);
 	}
 }
