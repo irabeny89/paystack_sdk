@@ -40,6 +40,7 @@ jobs:
         uses: cocogitto/cocogitto-action@v3
         id: cocogitto
         with:
+          check-latest-tag-only: true
           release: true
           git-user: 'Irabeny89'
           git-user-email: 'irabeny89@gmail.com'
