@@ -8,9 +8,11 @@ This will serve as a Software Development Kit (SDK) for handling payments.
 - [Paystack SDK](#paystack-sdk)
   - [Table of Content](#table-of-content)
   - [Technical Info](#technical-info)
+  - [Installation](#installation)
   - [Features](#features)
   - [Test](#test)
   - [Conventional Commit and Release Management](#conventional-commit-and-release-management)
+  - [Publish](#publish)
   - [Todo](#todo)
 
 ## Technical Info
@@ -20,8 +22,20 @@ Things to note:
 - This project was generated from a [starter template][buns].
 - This project was built with [Bun][buns] runtime.
 - Many script commands are executed with [Bun][buns].
-- Note: You do not have to use [Bun][buns] to use this library. 
+- Note: You do not have to use [Bun][buns] to use this library.
 - [Bun][buns] may only be required when working on the library itself and not when using it in your projects.
+
+## Installation
+
+This package can be installed with many package managers:
+
+```bash
+  # deno
+  deno add @irabeny/paystack_sdk
+
+  # npm (use any of npx, yarn dlx, pnpm dlx, or bunx)
+  npx jsr add @irabeny/paystack_sdk
+```
 
 ## Features
 
@@ -50,6 +64,15 @@ To run tests, just run the command below:
 ## Conventional Commit and Release Management
 
 [Cocogitto][coco] is used on this library project for conventional commit and changesets.
+
+## Publish
+
+To publish the package to JSR (JavaScript Registry):
+
+```bash
+  # bun (use any of npx, yarn dlx, pnpm dlx, or bunx)
+  bunx jsr publish
+```
 
 ## Todo
 
