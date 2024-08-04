@@ -1,6 +1,6 @@
 {
   "name": "@irabeny/paystack_sdk",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Paystack API library to manage payments.",
@@ -8,7 +8,8 @@
     "check": "bunx biome check --write src test",
     "test": "bun test",
     "build": "bun run build.mjs",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "publish": "bunx jsr publish"
   },
   "files": [
     "dist"
