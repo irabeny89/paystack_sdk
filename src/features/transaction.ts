@@ -1,3 +1,4 @@
+import pino, { Logger } from "pino";
 import {
 	TRANSACTION_CHARGE_AUTHORIZATION_PATH,
 	TRANSACTION_EXPORT_PATH,
@@ -10,6 +11,7 @@ import {
 } from "../../config";
 import createLogger from "../logger";
 import type {
+	ApiClientT,
 	OptionT,
 	PaginatedResponseT,
 	ResponseDataT,
@@ -64,12 +66,12 @@ export class Transaction {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel;
+	readonly logLevel: pino.Level | "silent" | undefined;
 
-	readonly logger;
+	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -95,7 +97,7 @@ export class Transaction {
 	 * @param body request body.
 	 * @return promise to initialize transaction
 	 */
-	initialize(body: TransactionInitializeBodyParamsT) {
+	initialize(body: TransactionInitializeBodyParamsT): Promise<ResponseDataT<TransactionInitializeResponseDataT>> {
 		this.logger?.info(
 			"initialize => returning promise to initialize transaction",
 		);
@@ -112,7 +114,7 @@ export class Transaction {
 	 * @param reference - a reference to an initialized/processed transaction
 	 * @return promise to verify transaction
 	 */
-	verify(reference: string) {
+	verify(reference: string): Promise<ResponseDataT<TransactionResponseDataT>> {
 		this.logger?.info(
 			"verify => returning promise to verify reference %s",
 			reference,
@@ -130,7 +132,7 @@ export class Transaction {
 	 * @param params query parameters where defaults are - `perPage 50`, `page 1`
 	 * @return promise to list transactions
 	 */
-	list(params?: TransactionListQueryParamsT) {
+	list(params?: TransactionListQueryParamsT): Promise<PaginatedResponseT<TransactionResponseDataT>> {
 		this.logger?.info("list => returning promise to get transaction list");
 		return this.apiClient?.get<PaginatedResponseT<TransactionResponseDataT>>(
 			TRANSACTION_LIST_PATH,
@@ -146,7 +148,7 @@ export class Transaction {
 	 * @param transactionId id of transaction data to fetch
 	 * @returns promise to fetch transaction
 	 */
-	fetch(transactionId: string) {
+	fetch(transactionId: string): Promise<ResponseDataT<TransactionResponseDataT>> {
 		this.logger?.info(
 			"fetch => returning promise to fetch a transaction: transactionId %s",
 			transactionId,
@@ -164,7 +166,7 @@ export class Transaction {
 	 * @param requestBody amount, email and authorization code are required
 	 * @return promise to charge authorization
 	 */
-	chargeAuthorization(requestBody: TransactionChargeAuthorizationBodyParamsT) {
+	chargeAuthorization(requestBody: TransactionChargeAuthorizationBodyParamsT): Promise<ResponseDataT<TransactionResponseDataT>> {
 		this.logger?.info(
 			"chargeAuthorization => returning promise to charge with customer authorization",
 		);
@@ -182,7 +184,7 @@ export class Transaction {
 	 * @param idOrReference id or reference of the transaction
 	 * @return promise to view transaction timeline
 	 */
-	timeline(idOrReference: string) {
+	timeline(idOrReference: string): Promise<ResponseDataT<TransactionTimelineResponseDataT[]>> {
 		this.logger?.info(
 			"timeline => returning promise to get transaction timeline with id or reference %s",
 			idOrReference,
@@ -200,7 +202,7 @@ export class Transaction {
 	 * @param params query parameters
 	 * @return promise to get transaction totals
 	 */
-	totals(params?: TransactionTotalsQueryParamsT) {
+	totals(params?: TransactionTotalsQueryParamsT): Promise<ResponseDataT<TransactionTotalsResponseDataT>> {
 		this.logger?.info(
 			"totals => returning promise to get total amount received on Paystack",
 		);
@@ -218,7 +220,7 @@ export class Transaction {
 	 * @param params optional query parameters
 	 * @return promise to export transaction records
 	 */
-	export(params?: TransactionExportParamsT) {
+	export(params?: TransactionExportParamsT): Promise<ResponseDataT<TransactionExportResponseDataT>> {
 		this.logger?.info(
 			"export => returning promise to get exported transactions",
 		);
@@ -236,7 +238,7 @@ export class Transaction {
 	 * @param requestBody request body
 	 * @return promise to partially debit
 	 */
-	partialDebit(requestBody: TransactionPartialDebitBodyParamsT) {
+	partialDebit(requestBody: TransactionPartialDebitBodyParamsT): Promise<ResponseDataT<TransactionResponseDataT>> {
 		this.logger?.info(
 			"partialDebit => returning promise to perform partial debit",
 		);

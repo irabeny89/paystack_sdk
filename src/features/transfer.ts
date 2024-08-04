@@ -5,7 +5,7 @@ import {
 	TRANSFER_PATH,
 } from "../../config";
 import createLogger from "../logger";
-import type { OptionT, ResponseDataT } from "../types/global";
+import type { ApiClientT, OptionT, ResponseDataT } from "../types/global";
 import type {
 	FinalizeBodyParamsT,
 	InitializeBulkResponseDataT,
@@ -55,7 +55,7 @@ export class Transfer {
 	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -84,7 +84,7 @@ export class Transfer {
 	 * @param body
 	 * @return promise to initiate transfer
 	 */
-	initiate(body: InitiateBodyParamsT) {
+	initiate(body: InitiateBodyParamsT): Promise<ResponseDataT<TransferResponseDataT>> {
 		this.logger?.info(
 			body,
 			"initiate => returning promise to initiate transfer",
@@ -103,7 +103,7 @@ export class Transfer {
 	 * @param body request body
 	 * @return promise to finalize transfer
 	 */
-	finalize(body: FinalizeBodyParamsT) {
+	finalize(body: FinalizeBodyParamsT): Promise<ResponseDataT<TransferResponseDataT>> {
 		this.logger?.info(
 			body,
 			"finalize => returning promise to finalize an initiated transfer.",
@@ -124,7 +124,7 @@ export class Transfer {
 	 * @param body - request data
 	 * @return promised to initiate bulk transfer
 	 */
-	initiateBulk(body: InitiateBulkBodyParamsT) {
+	initiateBulk(body: InitiateBulkBodyParamsT): Promise<ResponseDataT<InitializeBulkResponseDataT>> {
 		this.logger?.info(
 			body,
 			"initiateBulk => returning promise to initiate bulk transfer.",
@@ -143,7 +143,7 @@ export class Transfer {
 	 * @param params optional query parameters
 	 * @returns promised to list transfers
 	 */
-	list(params?: ListTransferQueryParamsT) {
+	list(params?: ListTransferQueryParamsT): Promise<ResponseDataT<ListResponseDataT>> {
 		this.logger?.info(
 			"list => returning promise to list transfers on the integration",
 		);
@@ -160,7 +160,7 @@ export class Transfer {
 	 * @param idOrCode transfer id or code
 	 * @return promise to fetch a transfer
 	 */
-	fetch(idOrCode: string) {
+	fetch(idOrCode: string): Promise<ResponseDataT<TransferResponseDataT>> {
 		this.logger?.info("fetch => returning promise to fetch a transfer");
 		return this.apiClient.get<ResponseDataT<TransferResponseDataT>>(
 			`${TRANSFER_PATH}/${idOrCode}`,
@@ -174,7 +174,7 @@ export class Transfer {
 	 * @param reference transfer reference
 	 * @returns promise to verify transfer
 	 */
-	verify(reference: string) {
+	verify(reference: string): Promise<ResponseDataT<VerifyResponseDataT>> {
 		this.logger?.info(
 			"verify => returning promise to verify a transfer",
 			reference,

@@ -113,3 +113,10 @@ export type AuthorizationT = {
 export type QueryT = {
 	[k: string]: string | number | boolean;
 };
+
+export type ApiClientT = {
+	get: <R = unknown>(path: string, query?: QueryT) => Promise<R>;
+	post: <R = unknown, B = unknown>(path: string, body: B) => Promise<R>;
+	put: <R = unknown, B = unknown>(path: string, body: B) => Promise<R>;
+	delete: <R = unknown, B = unknown>(path: string) => Promise<R>;
+}

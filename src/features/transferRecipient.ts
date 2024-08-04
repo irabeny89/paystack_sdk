@@ -1,9 +1,11 @@
+import pino, { Logger } from "pino";
 import {
 	TRANSFER_RECIPIENT_BULK_CREATE_PATH,
 	TRANSFER_RECIPIENT_PATH,
 } from "../../config";
 import createLogger from "../logger";
 import type {
+	ApiClientT,
 	ListQueryParamsT,
 	PaginatedResponseT,
 	RecipientOptionT,
@@ -42,11 +44,11 @@ export class TransferRecipient {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel;
+	readonly logLevel: pino.Level | "silent" | undefined;
 
-	readonly logger;
+	readonly logger: Logger<never> | undefined;
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -72,7 +74,7 @@ export class TransferRecipient {
 	 * @param requestBody request body
 	 * @return promise to create transfer recipient
 	 */
-	create<T extends RecipientOptionT>(requestBody: CreateBodyParamsT<T>) {
+	create<T extends RecipientOptionT>(requestBody: CreateBodyParamsT<T>): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"create => returning promise to create a transfer recipient",
 		);
@@ -91,7 +93,7 @@ export class TransferRecipient {
 	 * @param requestBody request body
 	 * @return promise to bulk create transfer recipient
 	 */
-	bulkCreate(requestBody: BulkCreateBodyParamsT) {
+	bulkCreate(requestBody: BulkCreateBodyParamsT): Promise<ResponseDataT<BulkCreateResponseDataT>> {
 		this.logger?.info(
 			"bulkCreate => returning promise to bulk create transfer recipient",
 		);
@@ -109,7 +111,8 @@ export class TransferRecipient {
 	 * @param query  query parameters
 	 * @return promise to list transfer recipient
 	 */
-	list(query?: ListQueryParamsT) {
+	list(query?: ListQueryParamsT): Promise<PaginatedResponseT<TransferRecipientResponseDataT>>
+	{
 		this.logger?.info("list => returning promise to list transfer recipients");
 		return this.apiClient.get<
 			PaginatedResponseT<TransferRecipientResponseDataT>
@@ -124,7 +127,7 @@ export class TransferRecipient {
 	 * @param idOrCode - id or code of the recipient
 	 * @return promise to fetch transfer recipient
 	 */
-	fetch(idOrCode: string) {
+	fetch(idOrCode: string): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"fetch => returning promise to fetch one transfer recipient (parameter: %s)",
 			idOrCode,
@@ -143,7 +146,7 @@ export class TransferRecipient {
 	 * @param update the new data to swap
 	 * @return promise to update transfer recipient
 	 */
-	update(idOrCode: string, update: Record<"name" | "email", string>) {
+	update(idOrCode: string, update: Record<"name" | "email", string>): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"update => returning promise to update a transfer recipient - %s",
 			idOrCode,
@@ -162,7 +165,7 @@ export class TransferRecipient {
 	 * @param idOrCode - id or code of the transfer recipient
 	 * @return transfer recipient response data
 	 */
-	delete(idOrCode: string) {
+	delete(idOrCode: string): Promise<StatusAndMessageT> {
 		this.logger?.info(
 			"delete => returning promise to delete a transfer recipient (parameter: %s",
 			idOrCode,

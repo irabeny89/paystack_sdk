@@ -1,6 +1,8 @@
+import pino, { Logger } from "pino";
 import { PLAN_PATH } from "../../config";
 import createLogger from "../logger";
 import type {
+	ApiClientT,
 	OptionT,
 	PaginatedResponseT,
 	ResponseDataT,
@@ -36,12 +38,12 @@ export class Plan {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel;
+	readonly logLevel: pino.Level | "silent" | undefined;
 
-	readonly logger;
+	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -62,7 +64,7 @@ export class Plan {
 	 * @param bodyParams request body params
 	 * @returns promise to create plan
 	 */
-	create(bodyParams: PlanBodyParamsT) {
+	create(bodyParams: PlanBodyParamsT): Promise<ResponseDataT<PlanDataT>> {
 		this.logger?.info("create => returning promise to create plan");
 		return this.apiClient.post<ResponseDataT<PlanDataT>>(PLAN_PATH, bodyParams);
 	}
@@ -74,7 +76,7 @@ export class Plan {
 	 * @param pathParams path parameters
 	 * @returns promise to list plans
 	 */
-	list(pathParams?: PlanListQueryParamsT) {
+	list(pathParams?: PlanListQueryParamsT): Promise<PaginatedResponseT<PlanResponseDataT>> {
 		this.logger?.info("list => returning promise to list plans");
 		return this.apiClient.get<PaginatedResponseT<PlanResponseDataT>>(
 			PLAN_PATH,
@@ -89,7 +91,7 @@ export class Plan {
 	 * @param idOrCode the plan ID or code you want to fetch
 	 * @returns promise to fetch plan
 	 */
-	fetch(idOrCode: string) {
+	fetch(idOrCode: string): Promise<ResponseDataT<PlanResponseDataT>> {
 		this.logger?.info("fetch => returning promise to fetch a plan");
 		return this.apiClient.get<ResponseDataT<PlanResponseDataT>>(
 			`${PLAN_PATH}/${idOrCode}`,
@@ -104,8 +106,8 @@ export class Plan {
 	 * @param bodyParams request body parameters
 	 * @returns promise to update plan
 	 */
-	update(idOrCode: string, bodyParams: PlanBodyParamsT) {
+	update(idOrCode: string, bodyParams: PlanBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "status" | "message">> {
 		this.logger?.info("update => returning promise to update plan");
-		return this.apiClient.put(`${PLAN_PATH}/${idOrCode}`, bodyParams);
+		return this.apiClient.put<Pick<ResponseDataT<unknown>, "message" | "status">>(`${PLAN_PATH}/${idOrCode}`, bodyParams);
 	}
 }

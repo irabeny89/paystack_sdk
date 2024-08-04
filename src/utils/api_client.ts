@@ -1,8 +1,8 @@
 import { PAYSTACK_BASE_URL } from "../../config";
-import type { QueryT } from "../types/global";
+import type { ApiClientT, QueryT } from "../types/global";
 
-const getData = async <T>(res: Response) => {
-	if (res.ok) return res.json<T>();
+const getData = async <T>(res: Response): Promise<T> => {
+	if (res.ok) return res.json();
 	throw new Error(`${res.status}: ${res.statusText}`);
 };
 
@@ -54,7 +54,7 @@ const createDelete =
 		return getData<R>(await fetch(createUrl(path), { headers }));
 	};
 
-export default function createApiClient(paystackSecret: string) {
+export default function createApiClient(paystackSecret: string): ApiClientT {
 	const headers = new Headers({
 		Authorization: `Bearer ${paystackSecret}`,
 		"Content-Type": "application/json",

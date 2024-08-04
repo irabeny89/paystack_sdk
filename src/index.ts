@@ -1,6 +1,7 @@
+import pino, { Logger } from "pino";
 import { Plan, Transaction, Transfer, TransferRecipient } from "./features";
 import createLogger from "./logger";
-import type { OptionT } from "./types/global";
+import type { ApiClientT, OptionT } from "./types/global";
 import createApiClient from "./utils/api_client";
 
 export { Transaction, Transfer, TransferRecipient } from "./features";
@@ -24,12 +25,12 @@ export default class Paystack {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel;
+	readonly logLevel: pino.Level | "silent" | undefined;
 
-	readonly logger;
+	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT;
 
 	// #region transaction
 	/**
@@ -105,7 +106,7 @@ export default class Paystack {
 	 * ! Create a transfer recipient first because data from that will be used here.
 	 * ! Disable the transfer OTP requirement to use `initiateBulk` method.
 	 */
-	readonly transfer;
+	readonly transfer: Transfer;
 
 	// #region plan
 	/**
@@ -125,14 +126,14 @@ export default class Paystack {
 	 *
 	 * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly plan;
+	readonly plan: Plan;
 
 	// #region constructor
 	/**
 	 * Creates an instance of Paystack.
 	 *
-	 * @param {string} paystackSecret - paystack secret key.
-	 * @param {OptionT} [option] - config options.
+	 * @param paystackSecret paystack secret key.
+	 * @param option config options.
 	 */
 
 	constructor(paystackSecret: string, option?: OptionT) {
