@@ -2,6 +2,7 @@ name: CI
 
 permissions:
   contents: write
+  id-token: write
 
 on:
   push:
@@ -10,69 +11,92 @@ on:
 
 jobs:
   # 1
-  test_and_release:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Install Dependencies
+        run: bun install
+
+      - name: Format And Lint
+        run: bun run check
+
+      - name: Test Code
+        run: bun test
+
+  # 2
+  build-and-deploy-docs:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Clean The Package
+        run: rm -f ./tsconfig.json; rm -rf ./docs
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      
+      - name: Install Dependencies
         run: |
-          bun install
           bun add next react react-dom
           bun install --global bun-doc
 
-      - name: Format and Lint
-        run: bun run check
-
-      - name: Run Test
-        run: bun test
-
-      - name: Check Conventional Commit and Release
-        uses: cocogitto/cocogitto-action@v3
-        id: cocogitto
-        with:
-          check-latest-tag-only: true
-          release: true
-          git-user: 'Irabeny89'
-          git-user-email: 'irabeny89@gmail.com'
-
-      
-      # The version number is accessible as a github action output
-      - name: Print Version
-        run: "echo '${{ steps.cocogitto.outputs.version }}'"
-          
-      - name: Clean The Package
-        run: rm -f ./tsconfig.json; rm -rf ./docs
-      
       - name: Build Documentation Page
-        run: bun-doc build; npx next build && npx next export; mv ./out ./docs
+        run: |
+          bun-doc build
+          bunx next build && bunx next export
+          mv ./out ./docs
 
-      - name: Deploy Documentation Page 🚀
+      - name: Deploy Documentation Page
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: docs
 
-      - name: Generate Changelog
-        run: cog changelog --at ${{ steps.cocogitto.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md
+  # 3
+  commit-and-changelog:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Conventional Commit Check
+        uses: cocogitto/cocogitto-action@v3
 
-      - name: Upload Github Release 🚀
+      - name: Semver Release
+        uses: cocogitto/cocogitto-action@v3
+        id: release
+        with:
+          release: true
+          git-user: 'irabeny89'
+          git-user-email: 'irabeny89@gmail.com'
+
+      # The version number is accessible as a github action output
+      - name: Print Version
+        run: "echo '${{ steps.release.outputs.version }}'"
+
+      - name: Upload Github Release
         id: gh-release
         uses: softprops/action-gh-release@v2
         with:
           body_path: GITHUB_CHANGELOG.md
-          tag_name: ${{ steps.cocogitto.outputs.version }}
-
-      - name: Github Release URL
-        run: echo "Github release link ${{ steps.gh-release.outputs.url }}"
-          
-      - name: Publish To JSR 🚀
+          tag_name: ${{ steps.release.outputs.version }}
+        
+  # 4
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish To JSR
         run: bun run publish
