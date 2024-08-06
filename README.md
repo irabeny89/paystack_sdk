@@ -31,11 +31,13 @@ This package can be installed with many package managers:
 
 ```bash
   # deno
-  deno add @irabeny/paystack_sdk
+  deno add @irabeny/paystack-sdk
 
   # npm (use any of npx, yarn dlx, pnpm dlx, or bunx)
-  npx jsr add @irabeny/paystack_sdk
+  npx jsr add @irabeny/paystack-sdk
 ```
+
+> visit JSR for more info: <https://jsr.io/@irabeny/paystack-sdk@latest>
 
 ## Features
 
@@ -76,9 +78,8 @@ To publish the package to JSR (JavaScript Registry):
 
 ## Todo
 
-- [ ] add [plans][plns]
-- [ ] add [subscriptions][subs]
-- [ ] add [cocogitto bot][cogb] to github
+- Verification
+- Miscellaneous
 
 [pays]: https://paystack.com
 [trns]: https://paystack.com/docs/api/transaction
