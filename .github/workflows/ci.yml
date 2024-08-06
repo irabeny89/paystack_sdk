@@ -35,7 +35,7 @@ jobs:
         run: bun test
 
       - name: Publish To JSR
-        run: bunx jsr publish --allow-dirty
+        run: bunx jsr publish
 
   # 2
   changelog_release:
