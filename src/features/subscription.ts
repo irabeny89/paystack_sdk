@@ -30,6 +30,11 @@ import createApiClient from "../utils/api_client";
  * - [x] Disable subscription
  * - [x] Generate update subscription link
  * - [x] Send email to update subscription link
+ * 
+ * @example
+ * ```ts
+ * 	const paystack = new Subscription("paystack-secret-key", { logLevel: "info" })
+ * ```
  */
 export class Subscription {
 	/**

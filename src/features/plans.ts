@@ -31,6 +31,11 @@ import createApiClient from "../utils/api_client";
  * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
  *
  * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
+ * 
+ * @example
+ * ```ts
+ * 	const paystack = new Plan("paystack-secret-key", { logLevel: "info" })
+ * ```
  */
 export class Plan {
 	/**

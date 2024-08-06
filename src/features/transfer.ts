@@ -43,6 +43,11 @@ import createApiClient from "../utils/api_client";
  * ## Note
  * ! Create a transfer recipient first because data from that will be used here.
  * ! Disable the transfer OTP requirement to use `initiateBulk` method.
+ * 
+ * @example
+ * ```ts
+ * 	const paystack = new Transfer("paystack-secret-key", { logLevel: "info" })
+ * ```
  */
 export class Transfer {
 	/**

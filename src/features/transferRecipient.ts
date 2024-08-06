@@ -37,6 +37,11 @@ import createApiClient from "../utils/api_client";
  *
  * * ## Note
  * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
+ * 
+ * @example
+ * ```ts
+ * 	const paystack = new TransferRecipient("paystack-secret-key", { logLevel: "info" })
+ * ```
  */
 export class TransferRecipient {
 	/**

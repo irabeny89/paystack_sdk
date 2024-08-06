@@ -59,6 +59,11 @@ import createApiClient from "../utils/api_client";
  * ! `amount` is in sub unit i.e N1, $1 e.t.c equals `100`.
  * ! Do not use the `reference` to verify on the frontend so as to not expose your Paystack secret.
  * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
+ * 
+ * @example
+ * ```ts
+ * 	const paystack = new Transaction("paystack-secret-key", { logLevel: "info" })
+ * ```
  */
 export class Transaction {
 	/**
