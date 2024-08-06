@@ -9,7 +9,8 @@
     "test": "bun test",
     "build": "bun run build.mjs",
     "prepublishOnly": "bun run build",
-    "publish": "bunx jsr publish"
+    "publish": "bunx jsr publish",
+    "test-publish": "bunx jsr publish --dry-run"
   },
   "files": [
     "dist"

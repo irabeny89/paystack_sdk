@@ -1,3 +1,4 @@
+import pino, { Logger } from "pino";
 import {
 	SUBSCRIPTION_DISABLE_PATH,
 	SUBSCRIPTION_ENABLE_PATH,
@@ -5,6 +6,7 @@ import {
 } from "../../config";
 import createLogger from "../logger";
 import type {
+	ApiClientT,
 	OptionT,
 	PaginatedResponseT,
 	ResponseDataT,
@@ -42,12 +44,12 @@ export class Subscription {
 	 *
 	 * This will stop at `trace` if set to `true` or `info` otherwise. Passing `silent` disables logging.
 	 */
-	readonly logLevel;
+	readonly logLevel: pino.Level | "silent" | undefined;
 
-	readonly logger;
+	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient;
+	readonly apiClient: ApiClientT;;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -72,7 +74,7 @@ export class Subscription {
 	 * @param bodyParams body parameters
 	 * @returns promise to create subscription
 	 */
-	create(bodyParams: CreateBodyParamsT) {
+	create(bodyParams: CreateBodyParamsT): Promise<ResponseDataT<SubscriptionT>> {
 		this.logger?.info("create => sending request to create subscription");
 		return this.apiClient.post<ResponseDataT<SubscriptionT>, CreateBodyParamsT>(
 			SUBSCRIPTION_PATH,
@@ -87,7 +89,7 @@ export class Subscription {
 	 * @param params path params
 	 * @returns promise to list subscriptions
 	 */
-	list(params: ListQueryParamsT) {
+	list(params: ListQueryParamsT): Promise<PaginatedResponseT<ListResponseData>> {
 		this.logger?.info("list => sending request to list subscriptions");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
@@ -102,7 +104,7 @@ export class Subscription {
 	 * @param idOrCode the subscription ID or code that you want to fetch
 	 * @returns promise to fetch a subscription
 	 */
-	fetch(idOrCode: string) {
+	fetch(idOrCode: string): Promise<PaginatedResponseT<ListResponseData>> {
 		this.logger?.info("fetch => sending request to fetch subscription");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
@@ -117,9 +119,9 @@ export class Subscription {
 	 * @param body body parameter
 	 * @returns promise to enable subscription
 	 */
-	enable(body: EnableDisableBodyParamsT) {
+	enable(body: EnableDisableBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info("enable => sending request to enable subscription");
-		return this.apiClient.post(SUBSCRIPTION_ENABLE_PATH, body);
+		return this.apiClient.post<Pick<ResponseDataT<unknown>, "message" | "status">>(SUBSCRIPTION_ENABLE_PATH, body);
 	}
 
 	// #region disable
@@ -129,9 +131,9 @@ export class Subscription {
 	 * @param body body parameter
 	 * @returns promise to disable subscription
 	 */
-	disable(body: EnableDisableBodyParamsT) {
+	disable(body: EnableDisableBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info("disable => sending request to disable subscription");
-		return this.apiClient.post(SUBSCRIPTION_DISABLE_PATH, body);
+		return this.apiClient.post<Pick<ResponseDataT<unknown>, "message" | "status">>(SUBSCRIPTION_DISABLE_PATH, body);
 	}
 
 	// #region generate update link
@@ -141,11 +143,11 @@ export class Subscription {
 	 * @param code subscription code
 	 * @returns promise to generate link to update subscription card
 	 */
-	generateUpdateLink(code: string) {
+	generateUpdateLink(code: string): Promise<ResponseDataT<Record<"link", string>>> {
 		this.logger?.info(
 			"generateUpdateLink => sending request to generate subscription card update link",
 		);
-		return this.apiClient.get(`${SUBSCRIPTION_PATH}/${code}/manage/link`);
+		return this.apiClient.get<ResponseDataT<Record<"link", string>>>(`${SUBSCRIPTION_PATH}/${code}/manage/link`);
 	}
 
 	// #region send update link
@@ -155,10 +157,10 @@ export class Subscription {
 	 * @param code subscription code
 	 * @returns promise to send email to update subscription card
 	 */
-	sendUpdateLink(code: string) {
+	sendUpdateLink(code: string): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info(
 			"sendUpdateLink => sending request to send subscription card update email",
 		);
-		return this.apiClient.get(`${SUBSCRIPTION_PATH}/${code}/manage/email`);
+		return this.apiClient.get<Pick<ResponseDataT<unknown>, "message" | "status">>(`${SUBSCRIPTION_PATH}/${code}/manage/email`);
 	}
 }
