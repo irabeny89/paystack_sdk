@@ -34,6 +34,9 @@ jobs:
       - name: Test Code
         run: bun test
 
+      - name: Bump Version
+        run: bun bump-version.ts
+
       - name: Publish To JSR
         run: bunx jsr publish --allow-dirty
 
