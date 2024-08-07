@@ -3,18 +3,47 @@ import pkg from "./package.json"
 import jsr from "./jsr.json"
 import createLogger from "./src/logger";
 
-const logger = createLogger("version-bump")
-try {
-  logger.info("using cog to get next semantic version")
-  const nextVersion = await $`cog bump --dry-run --auto`.text()
+type HasRequiredFieldT = {
+  version: string
+}
 
-  logger.info("assigning next update to package.json and jsr.json -> %s", nextVersion)
-  pkg.version = jsr.version = nextVersion.replace("\n", "")
-  
-  logger.info("overwriting package.json with the update")
-  await Bun.write("package.json", JSON.stringify(pkg, null, 2))
-  logger.info("overwriting jsr.json with the update")
-  await Bun.write("jsr.json", JSON.stringify(jsr, null, 2))
+type WriteInputT<T extends HasRequiredFieldT> = {
+  /** object with `version` property to update value for */
+  data: T
+  /** path to write new version into the filesystem */
+  path: Bun.PathLike
+}
+
+const logger = createLogger("version-bump")
+
+const bumpVersion = async <
+  T extends HasRequiredFieldT
+>(...args: WriteInputT<T>[]) => {
+  logger.info("using cog to get next semantic version")
+  let nextVersion = await $`cog bump --dry-run --auto`.text()
+  nextVersion = nextVersion.replace("\n", "")
+
+  Promise.allSettled(args.map(({ data, path }) => {
+    logger.info("assigning next version -> %s", nextVersion)
+    data.version = nextVersion
+
+    logger.info("writing data with updated version to -> %s", path.toString())
+
+    return Bun.write(path, JSON.stringify(data, null, 2))
+  }))
+}
+
+try {
+  await bumpVersion(
+    {
+      data: pkg as HasRequiredFieldT,
+      path: "package.json"
+    },
+    {
+      data: jsr as HasRequiredFieldT,
+      path: "jsr.json"
+    },
+  )
 } catch (error: any) {
   logger.error(error)
   throw new Error("Operation failed!")
