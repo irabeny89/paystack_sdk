@@ -24,7 +24,7 @@ const bumpVersion = async <
   nextVersion = nextVersion.replace("\n", "")
 
   Promise.allSettled(args.map(({ data, path }) => {
-    logger.info("assigning next version -> %s", nextVersion)
+    logger.info(`changing version: ${jsr.version} -> ${nextVersion}`)
     data.version = nextVersion
 
     logger.info("writing data with updated version to -> %s", path.toString())
