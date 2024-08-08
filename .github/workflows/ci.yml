@@ -1,5 +1,10 @@
 name: CI
 
+env:
+  USER: Irabeny
+  EMAIL: irabeny89@gmail.com
+  COMMIT-MSG: "chore: auto version bump [skip ci]"
+
 permissions:
   contents: write
   id-token: write
@@ -37,6 +42,28 @@ jobs:
       - name: Bump Version
         run: bun bump-version.ts
 
+      - name: Check For Changes
+        id: check_changes
+        run: |
+          git diff --exit-code
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Change found to commit"
+            echo "changes=true" >> "$GITHUB_OUTPUT";
+          else
+            echo "No change to commit."
+            echo "changes=false" >> "$GITHUB_OUTPUT"; 
+          fi
+
+      - name: Commit and Push Changes If Available
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+
+          git add .
+          git commit -m "chore: version auto bump"
+          git push origin main
+
       - name: Publish To JSR
         run: bunx jsr publish --allow-dirty
 
@@ -61,8 +88,8 @@ jobs:
         id: release
         with:
           release: true
-          git-user: 'irabeny89'
-          git-user-email: 'irabeny89@gmail.com'
+          git-user: '${{ env.USER }}'
+          git-user-email: '${{env.EMAIL}}'
           
       # The version number is accessible as a github action output
       - name: Print Version
