@@ -46,5 +46,5 @@ try {
   )
 } catch (error: any) {
   logger.error(error)
-  throw new Error("Operation failed!")
+  throw new error
 }
