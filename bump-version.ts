@@ -45,6 +45,5 @@ try {
     },
   )
 } catch (error: any) {
-  logger.error(error)
   throw error
 }
