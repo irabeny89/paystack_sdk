@@ -1,5 +1,9 @@
 import type { Level } from "pino";
 
+export type HasRequiredFieldT = {
+  version: string
+}
+
 export type JsonDataTypeOptionT = string | number | boolean;
 
 export type IdAndTimestampsT = {
