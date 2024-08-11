@@ -52,9 +52,6 @@ jobs:
           git add .
           git commit -m "style: format and lint"
 
-      - name: Conventional Commit Check
-        uses: cocogitto/cocogitto-action@v3
-
       - name: Get Next Version
         id: get_next_version
         uses: thenativeweb/get-next-version@main
@@ -79,7 +76,7 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           
           git add .
-          git commit -m "chore: version bump"
+          git commit -m "chore: version bump to ${{ steps.get_next_version.outputs.version }}"
 
       - name: Run Test
         run: bun test
