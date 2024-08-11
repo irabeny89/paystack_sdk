@@ -16,7 +16,7 @@ import type {
 	TransferResponseDataT,
 	VerifyResponseDataT,
 } from "../types/transfer_types";
-import createApiClient from "../utils/api_client";
+import { createApiClient } from "../utils/api_client";
 
 /**
  * # [Paystack Transfer API](https://paystack.com/docs/api/transfer)

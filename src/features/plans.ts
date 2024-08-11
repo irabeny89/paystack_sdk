@@ -14,7 +14,7 @@ import type {
 	PlanListQueryParamsT,
 	PlanResponseDataT,
 } from "../types/plan_types";
-import createApiClient from "../utils/api_client";
+import { createApiClient } from "../utils/api_client";
 
 /**
  * # [Paystack Plans API](https://paystack.com/docs/api/plan)

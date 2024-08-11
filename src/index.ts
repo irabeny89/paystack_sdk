@@ -9,7 +9,7 @@ import {
 } from "./features";
 import createLogger from "./logger";
 import type { ApiClientT, OptionT } from "./types/global";
-import createApiClient from "./utils/api_client";
+import { createApiClient } from "./utils/api_client";
 
 export {
 	Transaction,

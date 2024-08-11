@@ -30,7 +30,7 @@ import type {
 	TransactionTotalsQueryParamsT,
 	TransactionTotalsResponseDataT,
 } from "../types/transaction_types";
-import createApiClient from "../utils/api_client";
+import { createApiClient } from "../utils/api_client";
 
 /**
  * # [Paystack Transaction API](https://paystack.com/docs/api/transaction)

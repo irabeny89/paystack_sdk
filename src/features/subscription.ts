@@ -19,7 +19,7 @@ import type {
 	ListResponseData,
 	SubscriptionT,
 } from "../types/subscription_types";
-import createApiClient from "../utils/api_client";
+import { createApiClient } from "../utils/api_client";
 
 /**
  * # [Subscription](https://paystack.com/docs/api/subscription/#subscriptions)
