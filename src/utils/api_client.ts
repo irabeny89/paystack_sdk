@@ -54,6 +54,7 @@ const createDelete =
 		return getData<R>(await fetch(createUrl(path), { headers }));
 	};
 
+	// TODO: change to named export and export from main file at index.ts
 export default function createApiClient(paystackSecret: string): ApiClientT {
 	const headers = new Headers({
 		Authorization: `Bearer ${paystackSecret}`,
