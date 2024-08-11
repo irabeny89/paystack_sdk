@@ -3,7 +3,6 @@ name: CI
 env:
   USER: Irabeny
   EMAIL: irabeny89@gmail.com
-  COMMIT-MSG: "chore: auto version bump [skip ci]"
 
 permissions:
   contents: write
@@ -19,9 +18,7 @@ on:
       - main
 
 jobs:
-  # 1
-  test_and_publish:
-    name: Run Tests And Publish To JSR
+  lint_and_commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -39,51 +36,66 @@ jobs:
       - name: Format And Lint
         run: bun run check
 
-      - name: Test Code
-        run: bun test
-
-      - name: Get Next Version
-        id: get_next_version
-        uses: thenativeweb/get-next-version@main
-
-      - name: Update Version If Available
-        if: steps.get_next_version.outputs.hasNextVersion
-        run: |
-          echo updating version in files
-          NEXT_VERSION=${{ steps.get_next_version.outputs.version }} bun bump-version.ts
-
-          echo "generating changelog"
-          cog changelog
-        
       - name: Check For Changes
-        id: check_changes
+        id: format_and_lint_changes
         run: |
           git diff --exit-code
           if [[ -n $(git status --porcelain) ]]; then
-            echo "Change found to commit"
-            echo "changes=true" >> "$GITHUB_OUTPUT";
+            echo "New change found."
+            echo "format_and_lint_changes=true" >> "$GITHUB_OUTPUT";
           else
-            echo "No change to commit."
-            echo "changes=false" >> "$GITHUB_OUTPUT"; 
+            echo "No change found."
+            echo "format_and_lint_changes=false" >> "$GITHUB_OUTPUT"; 
           fi
 
-      - name: Commit and Push Changes If Available
-        if: steps.check_changes.outputs.changes == 'true'
+      - name: Commit Format And Lint Changes If Available
+        if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true'
         run: |
           git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           git config --global user.name "${GITHUB_ACTOR}"
 
           git add .
-          git commit -m "chore: version auto bump -> ${{ steps.get_next_version.outputs.version }}"
-          git push origin main
+          git commit -m "style: format and lint"
 
-      - name: Publish To JSR
-        run: bunx jsr publish --allow-dirty
+      - name: Conventional Commit Check
+        uses: cocogitto/cocogitto-action@v3
 
-  # 2
-  changelog_release:
-    name: Check Commit, Generate Changelog and Upload Release On Github
-    needs: test_and_publish
+      - name: Get Next Version
+        id: get_next_version
+        uses: thenativeweb/get-next-version@main
+      
+      - name: Update Version If Available
+        if: steps.get_next_version.outputs.hasNextVersion
+        run: |
+          echo "updating version in files"
+          NEXT_VERSION=${{ steps.get_next_version.outputs.version }} bun bump-version.ts
+
+      - name: Check For Changes
+        id: version_bump_changes
+        run: |
+          git diff --exit-code
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "New change found."
+            echo "version_bump=true" >> "$GITHUB_OUTPUT";
+          else
+            echo "No change found."
+            echo "version_bump=false" >> "$GITHUB_OUTPUT"; 
+          fi
+
+      - name: Commit Version Bump Changes If Available
+        if: steps.version_bump_changes.outputs.version_bump == 'true'
+        run: |
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+          
+          git add .
+          git commit -m "chore: version bump"
+
+      - name: Push Changes
+        run: git push origin main
+                    
+  release_and_publish:
+    needs: lint_and_commit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -92,11 +104,11 @@ jobs:
           fetch-depth: 0
           # pick the pr HEAD instead of the merge commit
           ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Run Test
+        run: bun test
           
-      - name: Conventional Commit Check
-        uses: cocogitto/cocogitto-action@v3
-
-      - name: Semver Release
+      - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
         id: release
         with:
@@ -108,7 +120,7 @@ jobs:
       - name: Print Version
         run: "echo '${{ steps.release.outputs.version }}'"
 
-      - name: Generate Changelog
+      - name: Generate Github Release Changelog
         run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md  
           
       - name: Upload Github Release
@@ -117,3 +129,7 @@ jobs:
         with:
           body_path: GITHUB_CHANGELOG.md
           tag_name: ${{ steps.release.outputs.version }}
+
+      - name: Publish To JSR
+        run: bunx jsr publish --allow-dirty
+  
