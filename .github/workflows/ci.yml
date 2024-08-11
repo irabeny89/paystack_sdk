@@ -39,13 +39,8 @@ jobs:
       - name: Check For Changes
         id: format_and_lint_changes
         run: |
-          git diff --exit-code
           if [[ -n $(git status --porcelain) ]]; then
-            echo "New change found."
             echo "format_and_lint_changes=true" >> "$GITHUB_OUTPUT";
-          else
-            echo "No change found."
-            echo "format_and_lint_changes=false" >> "$GITHUB_OUTPUT"; 
           fi
 
       - name: Commit Format And Lint Changes If Available
@@ -73,13 +68,8 @@ jobs:
       - name: Check For Changes
         id: version_bump_changes
         run: |
-          git diff --exit-code
           if [[ -n $(git status --porcelain) ]]; then
-            echo "New change found."
             echo "version_bump=true" >> "$GITHUB_OUTPUT";
-          else
-            echo "No change found."
-            echo "version_bump=false" >> "$GITHUB_OUTPUT"; 
           fi
 
       - name: Commit Version Bump Changes If Available
