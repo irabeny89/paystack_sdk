@@ -1,6 +1,6 @@
 {
   "name": "@irabeny/paystack-sdk",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Paystack API library to manage payments.",
