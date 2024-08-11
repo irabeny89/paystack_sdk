@@ -81,6 +81,9 @@ jobs:
           git add .
           git commit -m "chore: version bump"
 
+      - name: Run Test
+        run: bun test
+
       - name: Push Changes
         run: git push origin main
                     
@@ -100,9 +103,6 @@ jobs:
 
       - name: Install Dependencies
         run: bun install
-          
-      - name: Run Test
-        run: bun test
           
       - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
