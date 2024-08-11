@@ -1,10 +1,23 @@
-import pino, { Logger } from "pino";
-import { Plan, Transaction, Transfer, TransferRecipient, Subscription } from "./features";
+import type pino from "pino";
+import type { Logger } from "pino";
+import {
+	Plan,
+	Subscription,
+	Transaction,
+	Transfer,
+	TransferRecipient,
+} from "./features";
 import createLogger from "./logger";
 import type { ApiClientT, OptionT } from "./types/global";
 import createApiClient from "./utils/api_client";
 
-export { Transaction, Transfer, TransferRecipient, Plan, Subscription } from "./features";
+export {
+	Transaction,
+	Transfer,
+	TransferRecipient,
+	Plan,
+	Subscription,
+} from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
 
 /**
@@ -13,13 +26,13 @@ export { convertToMainUnit, convertToSubUnit } from "./utils";
  * @example
  * ```ts
  * import Paystack, { Transaction } from "paystack_sdk"
- * 
+ *
  * const secret = "secret-live-key"
  * const option = { logLevel: "info" } // optional, may be used in non-production environments
- * 
+ *
  * const paystack = new Paystack(secret, option)
  * const transaction = new Transaction(secret, option)
- * 
+ *
  * const _transaction = paystack.transaction // same feature as `transaction` above
  * ```
  */
@@ -35,7 +48,7 @@ export { convertToMainUnit, convertToSubUnit } from "./utils";
  * - [x] [Transfers](https://paystack.com/docs/api/transfer)
  * - [x] [Plans](https://paystack.com/docs/api/plans)
  * - [ ] [Subscriptions](https://paystack.com/docs/api/subscription)
- * 
+ *
  * @example
  * ```ts
  * 	const paystack = new Paystack("paystack-secret-key", { logLevel: "info" })
@@ -163,7 +176,7 @@ export default class Paystack {
 	 * - [x] Generate update subscription link
 	 * - [x] Send email to update subscription link
 	 */
-	readonly subscription: Subscription
+	readonly subscription: Subscription;
 
 	// #region constructor
 	/**
@@ -202,7 +215,9 @@ export default class Paystack {
 		this.logger?.info("constructor => adding Plan instance -> plan");
 		this.plan = new Plan(paystackSecret, option);
 
-		this.logger?.info("constructor => adding Subscription instance -> subscription")
+		this.logger?.info(
+			"constructor => adding Subscription instance -> subscription",
+		);
 		this.subscription = new Subscription(paystackSecret, option);
 	}
 }

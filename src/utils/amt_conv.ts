@@ -9,7 +9,7 @@
  * @export
  * @param {number} amount - amount to convert
  * @return {number} amount sub unit value
- * 
+ *
  * @example
  * ```ts
  * 	const kobo = convertToSubUnit(1) // 100

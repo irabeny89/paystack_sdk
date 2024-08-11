@@ -43,7 +43,7 @@ import createApiClient from "../utils/api_client";
  * ## Note
  * ! Create a transfer recipient first because data from that will be used here.
  * ! Disable the transfer OTP requirement to use `initiateBulk` method.
- * 
+ *
  * @example
  * ```ts
  * 	const paystack = new Transfer("paystack-secret-key", { logLevel: "info" })
@@ -89,7 +89,9 @@ export class Transfer {
 	 * @param body
 	 * @return promise to initiate transfer
 	 */
-	initiate(body: InitiateBodyParamsT): Promise<ResponseDataT<TransferResponseDataT>> {
+	initiate(
+		body: InitiateBodyParamsT,
+	): Promise<ResponseDataT<TransferResponseDataT>> {
 		this.logger?.info(
 			body,
 			"initiate => returning promise to initiate transfer",
@@ -108,7 +110,9 @@ export class Transfer {
 	 * @param body request body
 	 * @return promise to finalize transfer
 	 */
-	finalize(body: FinalizeBodyParamsT): Promise<ResponseDataT<TransferResponseDataT>> {
+	finalize(
+		body: FinalizeBodyParamsT,
+	): Promise<ResponseDataT<TransferResponseDataT>> {
 		this.logger?.info(
 			body,
 			"finalize => returning promise to finalize an initiated transfer.",
@@ -129,7 +133,9 @@ export class Transfer {
 	 * @param body - request data
 	 * @return promised to initiate bulk transfer
 	 */
-	initiateBulk(body: InitiateBulkBodyParamsT): Promise<ResponseDataT<InitializeBulkResponseDataT>> {
+	initiateBulk(
+		body: InitiateBulkBodyParamsT,
+	): Promise<ResponseDataT<InitializeBulkResponseDataT>> {
 		this.logger?.info(
 			body,
 			"initiateBulk => returning promise to initiate bulk transfer.",
@@ -148,7 +154,9 @@ export class Transfer {
 	 * @param params optional query parameters
 	 * @returns promised to list transfers
 	 */
-	list(params?: ListTransferQueryParamsT): Promise<ResponseDataT<ListResponseDataT>> {
+	list(
+		params?: ListTransferQueryParamsT,
+	): Promise<ResponseDataT<ListResponseDataT>> {
 		this.logger?.info(
 			"list => returning promise to list transfers on the integration",
 		);

@@ -1,8 +1,8 @@
 import type { Level } from "pino";
 
 export type HasRequiredFieldT = {
-  version: string
-}
+	version: string;
+};
 
 export type JsonDataTypeOptionT = string | number | boolean;
 
@@ -123,4 +123,4 @@ export type ApiClientT = {
 	post: <R = unknown, B = unknown>(path: string, body: B) => Promise<R>;
 	put: <R = unknown, B = unknown>(path: string, body: B) => Promise<R>;
 	delete: <R = unknown, B = unknown>(path: string) => Promise<R>;
-}
+};

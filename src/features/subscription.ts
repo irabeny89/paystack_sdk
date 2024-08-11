@@ -1,4 +1,5 @@
-import pino, { Logger } from "pino";
+import type pino from "pino";
+import type { Logger } from "pino";
 import {
 	SUBSCRIPTION_DISABLE_PATH,
 	SUBSCRIPTION_ENABLE_PATH,
@@ -32,7 +33,7 @@ import createApiClient from "../utils/api_client";
  * - [x] Disable subscription
  * - [x] Generate update subscription link
  * - [x] Send email to update subscription link
- * 
+ *
  * @example
  * ```ts
  * 	const paystack = new Subscription("paystack-secret-key", { logLevel: "info" })
@@ -49,7 +50,7 @@ export class Subscription {
 	readonly logger: Logger<never> | undefined;
 
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient: ApiClientT;;
+	readonly apiClient: ApiClientT;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -89,7 +90,9 @@ export class Subscription {
 	 * @param params path params
 	 * @returns promise to list subscriptions
 	 */
-	list(params: ListQueryParamsT): Promise<PaginatedResponseT<ListResponseData>> {
+	list(
+		params: ListQueryParamsT,
+	): Promise<PaginatedResponseT<ListResponseData>> {
 		this.logger?.info("list => sending request to list subscriptions");
 		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
 			SUBSCRIPTION_PATH,
@@ -119,9 +122,13 @@ export class Subscription {
 	 * @param body body parameter
 	 * @returns promise to enable subscription
 	 */
-	enable(body: EnableDisableBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
+	enable(
+		body: EnableDisableBodyParamsT,
+	): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info("enable => sending request to enable subscription");
-		return this.apiClient.post<Pick<ResponseDataT<unknown>, "message" | "status">>(SUBSCRIPTION_ENABLE_PATH, body);
+		return this.apiClient.post<
+			Pick<ResponseDataT<unknown>, "message" | "status">
+		>(SUBSCRIPTION_ENABLE_PATH, body);
 	}
 
 	// #region disable
@@ -131,9 +138,13 @@ export class Subscription {
 	 * @param body body parameter
 	 * @returns promise to disable subscription
 	 */
-	disable(body: EnableDisableBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
+	disable(
+		body: EnableDisableBodyParamsT,
+	): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info("disable => sending request to disable subscription");
-		return this.apiClient.post<Pick<ResponseDataT<unknown>, "message" | "status">>(SUBSCRIPTION_DISABLE_PATH, body);
+		return this.apiClient.post<
+			Pick<ResponseDataT<unknown>, "message" | "status">
+		>(SUBSCRIPTION_DISABLE_PATH, body);
 	}
 
 	// #region generate update link
@@ -143,11 +154,15 @@ export class Subscription {
 	 * @param code subscription code
 	 * @returns promise to generate link to update subscription card
 	 */
-	generateUpdateLink(code: string): Promise<ResponseDataT<Record<"link", string>>> {
+	generateUpdateLink(
+		code: string,
+	): Promise<ResponseDataT<Record<"link", string>>> {
 		this.logger?.info(
 			"generateUpdateLink => sending request to generate subscription card update link",
 		);
-		return this.apiClient.get<ResponseDataT<Record<"link", string>>>(`${SUBSCRIPTION_PATH}/${code}/manage/link`);
+		return this.apiClient.get<ResponseDataT<Record<"link", string>>>(
+			`${SUBSCRIPTION_PATH}/${code}/manage/link`,
+		);
 	}
 
 	// #region send update link
@@ -157,10 +172,14 @@ export class Subscription {
 	 * @param code subscription code
 	 * @returns promise to send email to update subscription card
 	 */
-	sendUpdateLink(code: string): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
+	sendUpdateLink(
+		code: string,
+	): Promise<Pick<ResponseDataT<unknown>, "message" | "status">> {
 		this.logger?.info(
 			"sendUpdateLink => sending request to send subscription card update email",
 		);
-		return this.apiClient.get<Pick<ResponseDataT<unknown>, "message" | "status">>(`${SUBSCRIPTION_PATH}/${code}/manage/email`);
+		return this.apiClient.get<
+			Pick<ResponseDataT<unknown>, "message" | "status">
+		>(`${SUBSCRIPTION_PATH}/${code}/manage/email`);
 	}
 }

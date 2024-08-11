@@ -1,4 +1,5 @@
-import pino, { Logger } from "pino";
+import type pino from "pino";
+import type { Logger } from "pino";
 import { PLAN_PATH } from "../../config";
 import createLogger from "../logger";
 import type {
@@ -31,7 +32,7 @@ import createApiClient from "../utils/api_client";
  * * Log levels are: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`, `true`.
  *
  * * The log level will set to `trace` if `true` is passed or `info` otherwise. Passing `silent` disables logging.
- * 
+ *
  * @example
  * ```ts
  * 	const paystack = new Plan("paystack-secret-key", { logLevel: "info" })
@@ -81,7 +82,9 @@ export class Plan {
 	 * @param pathParams path parameters
 	 * @returns promise to list plans
 	 */
-	list(pathParams?: PlanListQueryParamsT): Promise<PaginatedResponseT<PlanResponseDataT>> {
+	list(
+		pathParams?: PlanListQueryParamsT,
+	): Promise<PaginatedResponseT<PlanResponseDataT>> {
 		this.logger?.info("list => returning promise to list plans");
 		return this.apiClient.get<PaginatedResponseT<PlanResponseDataT>>(
 			PLAN_PATH,
@@ -111,8 +114,13 @@ export class Plan {
 	 * @param bodyParams request body parameters
 	 * @returns promise to update plan
 	 */
-	update(idOrCode: string, bodyParams: PlanBodyParamsT): Promise<Pick<ResponseDataT<unknown>, "status" | "message">> {
+	update(
+		idOrCode: string,
+		bodyParams: PlanBodyParamsT,
+	): Promise<Pick<ResponseDataT<unknown>, "status" | "message">> {
 		this.logger?.info("update => returning promise to update plan");
-		return this.apiClient.put<Pick<ResponseDataT<unknown>, "message" | "status">>(`${PLAN_PATH}/${idOrCode}`, bodyParams);
+		return this.apiClient.put<
+			Pick<ResponseDataT<unknown>, "message" | "status">
+		>(`${PLAN_PATH}/${idOrCode}`, bodyParams);
 	}
 }

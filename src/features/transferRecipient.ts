@@ -1,4 +1,5 @@
-import pino, { Logger } from "pino";
+import type pino from "pino";
+import type { Logger } from "pino";
 import {
 	TRANSFER_RECIPIENT_BULK_CREATE_PATH,
 	TRANSFER_RECIPIENT_PATH,
@@ -37,7 +38,7 @@ import createApiClient from "../utils/api_client";
  *
  * * ## Note
  * ! If using `from` and `to` then value should be timestamps eg `2023-04-24T13:29:03.264Z` or `2023-04-24`.
- * 
+ *
  * @example
  * ```ts
  * 	const paystack = new TransferRecipient("paystack-secret-key", { logLevel: "info" })
@@ -53,7 +54,7 @@ export class TransferRecipient {
 
 	readonly logger: Logger<never> | undefined;
 	/** pre-configured with Paystack secret and base url */
-	readonly apiClient: ApiClientT
+	readonly apiClient: ApiClientT;
 
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
@@ -79,7 +80,9 @@ export class TransferRecipient {
 	 * @param requestBody request body
 	 * @return promise to create transfer recipient
 	 */
-	create<T extends RecipientOptionT>(requestBody: CreateBodyParamsT<T>): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
+	create<T extends RecipientOptionT>(
+		requestBody: CreateBodyParamsT<T>,
+	): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"create => returning promise to create a transfer recipient",
 		);
@@ -98,7 +101,9 @@ export class TransferRecipient {
 	 * @param requestBody request body
 	 * @return promise to bulk create transfer recipient
 	 */
-	bulkCreate(requestBody: BulkCreateBodyParamsT): Promise<ResponseDataT<BulkCreateResponseDataT>> {
+	bulkCreate(
+		requestBody: BulkCreateBodyParamsT,
+	): Promise<ResponseDataT<BulkCreateResponseDataT>> {
 		this.logger?.info(
 			"bulkCreate => returning promise to bulk create transfer recipient",
 		);
@@ -116,8 +121,9 @@ export class TransferRecipient {
 	 * @param query  query parameters
 	 * @return promise to list transfer recipient
 	 */
-	list(query?: ListQueryParamsT): Promise<PaginatedResponseT<TransferRecipientResponseDataT>>
-	{
+	list(
+		query?: ListQueryParamsT,
+	): Promise<PaginatedResponseT<TransferRecipientResponseDataT>> {
 		this.logger?.info("list => returning promise to list transfer recipients");
 		return this.apiClient.get<
 			PaginatedResponseT<TransferRecipientResponseDataT>
@@ -132,7 +138,9 @@ export class TransferRecipient {
 	 * @param idOrCode - id or code of the recipient
 	 * @return promise to fetch transfer recipient
 	 */
-	fetch(idOrCode: string): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
+	fetch(
+		idOrCode: string,
+	): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"fetch => returning promise to fetch one transfer recipient (parameter: %s)",
 			idOrCode,
@@ -151,7 +159,10 @@ export class TransferRecipient {
 	 * @param update the new data to swap
 	 * @return promise to update transfer recipient
 	 */
-	update(idOrCode: string, update: Record<"name" | "email", string>): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
+	update(
+		idOrCode: string,
+		update: Record<"name" | "email", string>,
+	): Promise<ResponseDataT<TransferRecipientResponseDataT>> {
 		this.logger?.info(
 			"update => returning promise to update a transfer recipient - %s",
 			idOrCode,
