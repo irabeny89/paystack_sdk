@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { PAYSTACK_BASE_URL, TRANSFER_PATH } from "../config";
-import createApiClient, {
+import {
+	createApiClient,
 	addParamsToUrl,
 	createUrl,
 } from "../src/utils/api_client";
