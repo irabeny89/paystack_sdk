@@ -118,7 +118,7 @@ export class TransferRecipient {
 	 * # [List Transfer Recipients](https://paystack.com/docs/api/transfer-recipient/#list)
 	 * List transfer recipients available on your integration.
 	 *
-	 * @param query  query parameters
+	 * @param query query parameters
 	 * @return promise to list transfer recipient
 	 */
 	list(
@@ -135,7 +135,7 @@ export class TransferRecipient {
 	 * # [Fetch Transfer Recipient](https://paystack.com/docs/api/transfer-recipient/#fetch)
 	 * Fetch details of a transfer recipient.
 	 *
-	 * @param idOrCode - id or code of the recipient
+	 * @param idOrCode id or code of the recipient
 	 * @return promise to fetch transfer recipient
 	 */
 	fetch(
