@@ -6,6 +6,7 @@ import {
 	Transaction,
 	Transfer,
 	TransferRecipient,
+	Verification,
 } from "./features";
 import createLogger from "./logger";
 import type { ApiClientT, OptionT } from "./types/global";
@@ -17,6 +18,7 @@ export {
 	TransferRecipient,
 	Plan,
 	Subscription,
+	Verification
 } from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
 
@@ -47,7 +49,8 @@ export { convertToMainUnit, convertToSubUnit } from "./utils";
  * - [x] [Transfer Recipients](https://paystack.com/docs/api/transfer-recipient)
  * - [x] [Transfers](https://paystack.com/docs/api/transfer)
  * - [x] [Plans](https://paystack.com/docs/api/plans)
- * - [ ] [Subscriptions](https://paystack.com/docs/api/subscription)
+ * - [x] [Subscriptions](https://paystack.com/docs/api/subscription)
+ * - [x] [Verification](https://paystack.com/docs/api/verification/)
  *
  * @example
  * ```ts
@@ -178,6 +181,17 @@ export default class Paystack {
 	 */
 	readonly subscription: Subscription;
 
+	/**
+	 * # [Verification](https://paystack.com/docs/api/verification/)
+ * The Verification API allows you perform KYC processes.
+ *
+ * ## Features
+ * - [x] Resolve account number
+ * - [x] Validate account
+ * - [x] Resolve Card BIN
+	 */
+	readonly verification: Verification;
+
 	// #region constructor
 	/**
 	 * Creates an instance of Paystack.
@@ -219,5 +233,8 @@ export default class Paystack {
 			"constructor => adding Subscription instance -> subscription",
 		);
 		this.subscription = new Subscription(paystackSecret, option);
+		
+		this.logger?.info("constructor => adding Verification instance -> verification")
+		this.verification = new Verification(paystackSecret, option);
 	}
 }

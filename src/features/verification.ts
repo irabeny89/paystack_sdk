@@ -22,7 +22,7 @@ import { createApiClient } from "../utils/api_client";
  * ## Features
  * - [x] Resolve account number
  * - [x] Validate account
- * - [ ] Resolve Card BIN
+ * - [x] Resolve Card BIN
  *
  * @example
  * ```ts
