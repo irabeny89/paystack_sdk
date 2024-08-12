@@ -18,7 +18,7 @@ on:
       - main
 
 jobs:
-  lint_and_commit:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -83,24 +83,7 @@ jobs:
 
       - name: Push Changes
         run: git push origin main
-                    
-  release_and_publish:
-    needs: lint_and_commit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          # pick the pr HEAD instead of the merge commit
-          ref: ${{ github.event.pull_request.head.sha }}
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
 
-      - name: Install Dependencies
-        run: bun install
-          
       - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
         id: release
@@ -125,4 +108,3 @@ jobs:
 
       - name: Publish To JSR
         run: bunx jsr publish --allow-dirty
-  
