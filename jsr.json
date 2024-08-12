@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "exports": "./src/index.ts",
   "exclude": [
-    "./test"
+    "./test",
+    "./dist"
   ]
 }
