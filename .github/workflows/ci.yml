@@ -81,7 +81,8 @@ jobs:
       - name: Run Test
         run: bun test
 
-      - name: Push Changes
+      - name: Push Committed Changes
+        if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
         run: git push origin main
 
       - name: Conventional Commit and Semver Release
