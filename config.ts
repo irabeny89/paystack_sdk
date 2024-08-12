@@ -34,3 +34,9 @@ export const SUBSCRIPTION_PATH = "/subscription"
 export const SUBSCRIPTION_ENABLE_PATH = "/subscription/enable"
 
 export const SUBSCRIPTION_DISABLE_PATH = "/subscription/disable"
+
+export const VERIFICATION_RESOLVE_PATH = "/bank/resolve"
+
+export const VERIFICATION_VALIDATE_PATH = "/bank/validate"
+
+export const VERIFICATION_CARD_BIN = "/decision/bin"
