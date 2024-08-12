@@ -92,10 +92,6 @@ jobs:
           git-user: '${{ env.USER }}'
           git-user-email: '${{env.EMAIL}}'
           
-      # The version number is accessible as a github action output
-      - name: Print Version
-        run: "echo '${{ steps.release.outputs.version }}'"
-
       - name: Generate Github Release Changelog
         run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md  
           
