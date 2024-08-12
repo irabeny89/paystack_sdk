@@ -50,6 +50,7 @@ These are the currently implemented features:
 3. [Transfers][trsf]
 4. [Plans][plns]
 5. [Subscriptions][subs]
+6. [Verification][verf]
 
 ## Test
 
@@ -78,7 +79,6 @@ To publish the package to JSR (JavaScript Registry):
 
 ## Todo
 
-- Verification
 - Miscellaneous
 
 [pays]: https://paystack.com
@@ -87,6 +87,6 @@ To publish the package to JSR (JavaScript Registry):
 [trsf]: https://paystack.com/docs/api/transfers
 [coco]: https://docs.cocogitto.io/
 [buns]: https://github.com/wobsoriano/bun-lib-starter
-[cogb]: https://docs.cocogitto.io/ci_cd/#github-bot
 [plns]: https://paystack.com/docs/api/plans
 [subs]: https://paystack.com/docs/api/subscriptions
+[verf]: https://paystack.com/docs/api/verification/
