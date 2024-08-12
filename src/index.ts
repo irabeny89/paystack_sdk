@@ -18,7 +18,7 @@ export {
 	TransferRecipient,
 	Plan,
 	Subscription,
-	Verification
+	Verification,
 } from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
 
@@ -183,12 +183,12 @@ export default class Paystack {
 
 	/**
 	 * # [Verification](https://paystack.com/docs/api/verification/)
- * The Verification API allows you perform KYC processes.
- *
- * ## Features
- * - [x] Resolve account number
- * - [x] Validate account
- * - [x] Resolve Card BIN
+	 * The Verification API allows you perform KYC processes.
+	 *
+	 * ## Features
+	 * - [x] Resolve account number
+	 * - [x] Validate account
+	 * - [x] Resolve Card BIN
 	 */
 	readonly verification: Verification;
 
@@ -233,8 +233,10 @@ export default class Paystack {
 			"constructor => adding Subscription instance -> subscription",
 		);
 		this.subscription = new Subscription(paystackSecret, option);
-		
-		this.logger?.info("constructor => adding Verification instance -> verification")
+
+		this.logger?.info(
+			"constructor => adding Verification instance -> verification",
+		);
 		this.verification = new Verification(paystackSecret, option);
 	}
 }
