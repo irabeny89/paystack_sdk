@@ -12,13 +12,11 @@ This will serve as a Software Development Kit (SDK) for handling payments.
   - [Features](#features)
   - [Test](#test)
   - [Conventional Commit and Release Management](#conventional-commit-and-release-management)
-  - [Publish](#publish)
 
 ## Technical Info
 
 Things to note:
 
-- This project was generated from a [starter template][buns].
 - This project was built with [Bun][buns] runtime.
 - Many script commands are executed with [Bun][buns].
 - Note: You do not have to use [Bun][buns] to use this library.
@@ -67,15 +65,6 @@ To run tests, just run the command below:
 ## Conventional Commit and Release Management
 
 [Cocogitto][coco] is used on this library project for conventional commit and changesets.
-
-## Publish
-
-To publish the package to JSR (JavaScript Registry):
-
-```bash
-  # bun (use any of npx, yarn dlx, pnpm dlx, or bunx)
-  bunx jsr publish
-```
 
 [pays]: https://paystack.com
 [coco]: https://docs.cocogitto.io/
