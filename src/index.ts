@@ -1,6 +1,7 @@
 import type pino from "pino";
 import type { Logger } from "pino";
 import {
+	Misc,
 	Plan,
 	Subscription,
 	Transaction,
@@ -19,6 +20,7 @@ export {
 	Plan,
 	Subscription,
 	Verification,
+	Misc,
 } from "./features";
 export { convertToMainUnit, convertToSubUnit } from "./utils";
 
@@ -51,6 +53,7 @@ export { convertToMainUnit, convertToSubUnit } from "./utils";
  * - [x] [Plans](https://paystack.com/docs/api/plans)
  * - [x] [Subscriptions](https://paystack.com/docs/api/subscription)
  * - [x] [Verification](https://paystack.com/docs/api/verification/)
+ * - [x] [Miscellaneous](https://paystack.com/docs/api/miscellaneous/)
  *
  * @example
  * ```ts
@@ -192,6 +195,17 @@ export default class Paystack {
 	 */
 	readonly verification: Verification;
 
+	/**
+	 * # [Miscellaneous](https://paystack.com/docs/api/miscellaneous/)
+	 * The Miscellaneous API are supporting APIs that can be used to provide more details to other APIs.
+	 *
+	 * ## Features
+	 * - [x] list banks
+	 * - [x] list countries
+	 * - [x] list states
+	 */
+	readonly misc: Misc;
+
 	// #region constructor
 	/**
 	 * Creates an instance of Paystack.
@@ -238,5 +252,8 @@ export default class Paystack {
 			"constructor => adding Verification instance -> verification",
 		);
 		this.verification = new Verification(paystackSecret, option);
+
+		this.logger?.info("constructor => adding miscellaneous instance -> misc");
+		this.misc = new Misc(paystackSecret, option);
 	}
 }

@@ -23,8 +23,18 @@ export type ResponseDataT<T> = {
 	data: T;
 } & StatusAndMessageT;
 
+type PaginatedResponseMetaT = {
+	total?: number;
+	skipped?: number;
+	page?: number;
+	pageCount?: number;
+	next?: number;
+	previous?: number;
+	perPage?: number;
+};
+
 export type PaginatedResponseT<T> = {
-	meta: Record<"total" | "skipped" | "perPage" | "page" | "pageCount", number>;
+	meta?: PaginatedResponseMetaT;
 	data: T[];
 } & StatusAndMessageT;
 
@@ -62,11 +72,15 @@ export type ListQueryParamsT = {
 
 export type CurrencyOptionT = "NGN" | "GHS" | "ZAR" | "USD";
 
+export type CountryOptionT = "nigeria" | "ghana" | "kenya" | "south africa";
+
 export type CardBrandOptionT = "visa" | "verve" | "mastercard";
 
 export type PaymentChannelOptionT = "card" | "bank" | "ussd" | "qr";
 
 export type DomainOptionT = "test" | "live";
+
+export type GatewayOptionT = "emandate" | "digitalbankmandate";
 
 export type GatewayResponseOptionT = "declined" | "successful";
 

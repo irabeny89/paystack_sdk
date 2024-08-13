@@ -13,7 +13,6 @@ This will serve as a Software Development Kit (SDK) for handling payments.
   - [Test](#test)
   - [Conventional Commit and Release Management](#conventional-commit-and-release-management)
   - [Publish](#publish)
-  - [Todo](#todo)
 
 ## Technical Info
 
@@ -51,6 +50,7 @@ These are the currently implemented features:
 4. [Plans][plns]
 5. [Subscriptions][subs]
 6. [Verification][verf]
+7. [Miscellaneous][misc]
 
 ## Test
 
@@ -77,16 +77,13 @@ To publish the package to JSR (JavaScript Registry):
   bunx jsr publish
 ```
 
-## Todo
-
-- Miscellaneous
-
 [pays]: https://paystack.com
+[coco]: https://docs.cocogitto.io/
+[buns]: https://github.com/wobsoriano/bun-lib-starter
 [trns]: https://paystack.com/docs/api/transaction
 [trfr]: https://paystack.com/docs/api/transfer-recipient
 [trsf]: https://paystack.com/docs/api/transfers
-[coco]: https://docs.cocogitto.io/
-[buns]: https://github.com/wobsoriano/bun-lib-starter
 [plns]: https://paystack.com/docs/api/plans
 [subs]: https://paystack.com/docs/api/subscriptions
 [verf]: https://paystack.com/docs/api/verification/
+[misc]: https://paystack.com/docs/api/miscellaneous/

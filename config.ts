@@ -40,3 +40,9 @@ export const VERIFICATION_RESOLVE_PATH = "/bank/resolve"
 export const VERIFICATION_VALIDATE_PATH = "/bank/validate"
 
 export const VERIFICATION_CARD_BIN = "/decision/bin"
+
+export const MISC_BANKS_PATH = "/bank"
+
+export const MISC_COUNTRIES_PATH = "/country"
+
+export const MISC_STATES_PATH = "/address_verification/states"
