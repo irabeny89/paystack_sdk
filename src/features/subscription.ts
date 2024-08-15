@@ -15,8 +15,9 @@ import type {
 import type {
 	CreateBodyParamsT,
 	EnableDisableBodyParamsT,
+	FetchResponseDataT,
 	ListQueryParamsT,
-	ListResponseData,
+	ListResponseDataT,
 	SubscriptionT,
 } from "../types/subscription_types";
 import { createApiClient } from "../utils/api_client";
@@ -64,7 +65,6 @@ export class Subscription {
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		this.logger?.info("constructor => adding API client -> apiClient");
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
@@ -91,10 +91,10 @@ export class Subscription {
 	 * @returns promise to list subscriptions
 	 */
 	list(
-		params: ListQueryParamsT,
-	): Promise<PaginatedResponseT<ListResponseData>> {
+		params?: ListQueryParamsT,
+	): Promise<PaginatedResponseT<ListResponseDataT>> {
 		this.logger?.info("list => sending request to list subscriptions");
-		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
+		return this.apiClient.get<PaginatedResponseT<ListResponseDataT>>(
 			SUBSCRIPTION_PATH,
 			params,
 		);
@@ -107,11 +107,10 @@ export class Subscription {
 	 * @param idOrCode the subscription ID or code that you want to fetch
 	 * @returns promise to fetch a subscription
 	 */
-	fetch(idOrCode: string): Promise<PaginatedResponseT<ListResponseData>> {
+	fetch(idOrCode: string): Promise<PaginatedResponseT<FetchResponseDataT>> {
 		this.logger?.info("fetch => sending request to fetch subscription");
-		return this.apiClient.get<PaginatedResponseT<ListResponseData>>(
-			SUBSCRIPTION_PATH,
-			{ path: `/${idOrCode}` },
+		return this.apiClient.get<PaginatedResponseT<FetchResponseDataT>>(
+			`${SUBSCRIPTION_PATH}/${idOrCode}`
 		);
 	}
 
