@@ -9,7 +9,7 @@ export type ListBankQueryParamsT = {
 	/** The country from which to obtain the list of supported banks. Accepted values are: `ghana`, `kenya`, `nigeria`, `south africa`. */
 	country: CountryOptionT;
 	/** Flag to enable cursor pagination on the endpoint. */
-	use_cursor: boolean;
+	use_cursor?: boolean;
 	/** The number of objects to return per page. Defaults to 50, and limited to 100 records per page. */
 	perPage?: number;
 	/** A flag to filter for available banks a customer can make a transfer to complete a payment. */
