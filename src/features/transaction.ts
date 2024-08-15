@@ -91,7 +91,6 @@ export class Transaction {
 			this.logger.level = this.logLevel = option.logLevel;
 		}
 
-		this.logger?.info("constructor => adding API client -> apiClient");
 		this.apiClient = createApiClient(paystackSecret);
 	}
 

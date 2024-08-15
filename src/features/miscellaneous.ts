@@ -47,8 +47,13 @@ export class Misc {
 		if (option?.logLevel) {
 			this.logger = createLogger("Misc");
 
+			this.logger?.info(
+				"constructor => setting and adding log level (%s) -> logLevel",
+				option.logLevel,
+			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
+		
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
