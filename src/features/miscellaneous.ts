@@ -26,7 +26,7 @@ import { createApiClient } from "../utils/api_client";
  *
  * @examples
  * ```ts
- *  const misc = new Misc("paystack-secret-key")
+ *  const misc = new Misc("paystack-secret-key", { logLevel: "info" })
  * ```
  */
 export class Misc {
@@ -45,12 +45,10 @@ export class Misc {
 	// #region constructor
 	constructor(paystackSecret: string, option?: OptionT) {
 		if (option?.logLevel) {
-			this.logger = createLogger("Plan");
+			this.logger = createLogger("Misc");
 
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-
-		this.logger?.info("constructor => adding API client -> apiClient");
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
@@ -89,16 +87,16 @@ export class Misc {
 	/**
 	 * # [List States (AVS)](https://paystack.com/docs/api/miscellaneous/#avs-states)
 	 * Get a list of states for a country for address verification.
-	 * @param countryCode country code of the states to list. It is gotten after the charge request
+	 * @param country country code of the states to list. It is gotten after the charge request
 	 * @return promise to list states
 	 */
 	listStates(
-		countryCode: string,
+		country: string,
 	): Promise<PaginatedResponseT<ListStatesResponseDataT>> {
 		this.logger?.info("listStates => returning promise to list states");
 		return this.apiClient.get<PaginatedResponseT<ListStatesResponseDataT>>(
 			MISC_STATES_PATH,
-			{ countryCode },
+			{ country },
 		);
 	}
 }
