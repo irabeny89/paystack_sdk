@@ -3,6 +3,7 @@ import type {
 	DomainOptionT,
 	IdAndTimestampsT,
 	MetaDataT,
+	RiskActionOptionT,
 } from "./global";
 import type { PlanDataT } from "./plan_types";
 
@@ -55,11 +56,12 @@ type CustomerT = {
 	phone: string;
 	metadata: MetaDataT | null;
 	domain: DomainOptionT;
-	createdAt: string;
-	updatedAt: string;
-};
+	customer_code: string;
+	risk_action: RiskActionOptionT;
+	integration: number;
+} & IdAndTimestampsT;
 
-export type ListResponseData = {
+export type ListResponseDataT = {
 	customer: CustomerT;
 	plan: PlanDataT;
 	authorization: AuthorizationT;
@@ -72,3 +74,11 @@ export type EnableDisableBodyParamsT = {
 	/** Email token */
 	token: string;
 };
+
+export type FetchResponseDataT = {
+	invoice: unknown[]
+	customer: CustomerT
+	plan: PlanDataT
+	integration: number
+	authorization: AuthorizationT
+} & SubscriptionT;
