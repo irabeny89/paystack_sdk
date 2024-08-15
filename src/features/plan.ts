@@ -58,8 +58,6 @@ export class Plan {
 
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-
-		this.logger?.info("constructor => adding API client -> apiClient");
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
@@ -116,7 +114,7 @@ export class Plan {
 	 */
 	update(
 		idOrCode: string,
-		bodyParams: PlanBodyParamsT,
+		bodyParams: Partial<PlanBodyParamsT>,
 	): Promise<Pick<ResponseDataT<unknown>, "status" | "message">> {
 		this.logger?.info("update => returning promise to update plan");
 		return this.apiClient.put<
