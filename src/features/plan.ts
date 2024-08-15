@@ -56,8 +56,13 @@ export class Plan {
 		if (option?.logLevel) {
 			this.logger = createLogger("Plan");
 
+			this.logger?.info(
+				"constructor => setting and adding log level (%s) -> logLevel",
+				option.logLevel,
+			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
+		
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
