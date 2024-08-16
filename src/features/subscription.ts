@@ -110,7 +110,7 @@ export class Subscription {
 	fetch(idOrCode: string): Promise<PaginatedResponseT<FetchResponseDataT>> {
 		this.logger?.info("fetch => sending request to fetch subscription");
 		return this.apiClient.get<PaginatedResponseT<FetchResponseDataT>>(
-			`${SUBSCRIPTION_PATH}/${idOrCode}`
+			`${SUBSCRIPTION_PATH}/${idOrCode}`,
 		);
 	}
 

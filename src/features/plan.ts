@@ -62,7 +62,7 @@ export class Plan {
 			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-		
+
 		this.apiClient = createApiClient(paystackSecret);
 	}
 

@@ -53,7 +53,7 @@ export class Misc {
 			);
 			this.logger.level = this.logLevel = option.logLevel;
 		}
-		
+
 		this.apiClient = createApiClient(paystackSecret);
 	}
 
