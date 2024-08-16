@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Subscription } from "../src";
+import { Subscription } from "../../src";
 
 describe("Subscription", () => {
 	const key = Bun.env.PAYSTACK_TEST_PRIVATE_KEY ?? "";

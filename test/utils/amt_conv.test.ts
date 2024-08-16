@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { convertToMainUnit, convertToSubUnit } from "../src/utils/amt_conv";
+import { convertToMainUnit, convertToSubUnit } from "../../src";
 
 describe("convertToMainUnit", () => {
 	test("should convert amount in sub unit to main unit", () => {
