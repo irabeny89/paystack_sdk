@@ -53,12 +53,16 @@ These are the currently implemented features:
 ## Test
 
 > To run tests on the implemented features you need to be connected to the internet.
-> This is because the requests are not sent to the Paystack servers during testing (no secret key, and so on).
-> But rather the error thrown from using invalid keys is caught and the parameters and arguments are validated.
+> To run tests on implemented features you will require to store your paystack test key as environment variable in `PAYSTACK_TEST_PRIVATE_KEY`
 
 To run tests, just run the command below:
 
 ```bash
+  # utils tests
+  bun run test-utils
+  # or features test - require PAYSTACK_TEST_PRIVATE_KEY
+  bun run test-feats
+  # or all tests - require PAYSTACK_TEST_PRIVATE_KEY
   bun test
 ```
 
