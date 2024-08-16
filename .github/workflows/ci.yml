@@ -79,7 +79,7 @@ jobs:
           git commit -m "chore: version bump to ${{ steps.get_next_version.outputs.version }}"
 
       - name: Run Test
-        run: bun test
+        run: bun run test-utils
 
       - name: Push Committed Changes
         if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
