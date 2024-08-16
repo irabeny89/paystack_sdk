@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Plan } from "../src";
-import type { PlanBodyParamsT } from "../src/types/plan_types";
+import { Plan } from "../../src";
+import type { PlanBodyParamsT } from "../../src/types/plan_types";
 
 describe("Plan", () => {
 	const key = Bun.env.PAYSTACK_TEST_PRIVATE_KEY ?? "";

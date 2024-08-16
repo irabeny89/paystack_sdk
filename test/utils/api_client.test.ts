@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { PAYSTACK_BASE_URL, TRANSFER_PATH } from "../config";
+import { PAYSTACK_BASE_URL, TRANSFER_PATH } from "../../config";
 import {
 	addParamsToUrl,
 	createApiClient,
 	createUrl,
-} from "../src/utils/api_client";
+} from "../../src/utils/api_client";
 
 describe("API Client", () => {
 	const SECRET = "asiri";
