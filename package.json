@@ -8,9 +8,9 @@
     "check": "bunx biome check --write src test",
     "test": "bun test",
     "build": "bun run build.mjs",
-    "prepublishOnly": "bun run build",
     "publish": "bunx jsr publish",
-    "test-publish": "bunx jsr publish --dry-run"
+    "test-publish": "bunx jsr publish --dry-run",
+    "get-next-version": "cog bump --dry-run --auto"
   },
   "files": [
     "dist"

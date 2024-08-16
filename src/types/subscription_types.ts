@@ -76,9 +76,9 @@ export type EnableDisableBodyParamsT = {
 };
 
 export type FetchResponseDataT = {
-	invoice: unknown[]
-	customer: CustomerT
-	plan: PlanDataT
-	integration: number
-	authorization: AuthorizationT
+	invoice: unknown[];
+	customer: CustomerT;
+	plan: PlanDataT;
+	integration: number;
+	authorization: AuthorizationT;
 } & SubscriptionT;
