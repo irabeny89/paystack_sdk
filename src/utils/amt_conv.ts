@@ -43,7 +43,7 @@ export function convertToSubUnit(amount: number): number {
  * @example
  * ```ts
  *  const amount = 100
- * 	const naira = convertToSubUnit(amount) // 1
+ * 	const naira = convertToMainUnit(amount) // 1
  * ```
  */
 export function convertToMainUnit(amount: number): number {
