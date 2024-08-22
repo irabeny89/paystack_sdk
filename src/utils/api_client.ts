@@ -11,8 +11,8 @@ export const addParamsToUrl = (url: string, entry: unknown[], index: number) =>
 		? `${url}?${entry[0]}=${entry[1]}`
 		: `${url}&${entry[0]}=${entry[1]}`;
 
-export const createUrl = (path: string, query?: QueryT) => {
-	let url = `${PAYSTACK_BASE_URL}${path}`;
+export const createUrl = (uri: string, query?: QueryT) => {
+	let url = `${PAYSTACK_BASE_URL}${uri}`;
 	if (query) url = Object.entries(query).reduce(addParamsToUrl, url);
 
 	return url;
@@ -20,15 +20,15 @@ export const createUrl = (path: string, query?: QueryT) => {
 
 const createGet =
 	(headers: Headers) =>
-	async <R = unknown>(path: string, query?: QueryT) => {
-		return getData<R>(await fetch(createUrl(path, query), { headers }));
+	async <R = unknown>(uri: string, query?: QueryT) => {
+		return getData<R>(await fetch(createUrl(uri, query), { headers }));
 	};
 
 const createPost =
 	(headers: Headers) =>
-	async <R = unknown, B = unknown>(path: string, body: B) => {
+	async <R = unknown, B = unknown>(uri: string, body: B) => {
 		return getData<R>(
-			await fetch(`${PAYSTACK_BASE_URL}${path}`, {
+			await fetch(`${PAYSTACK_BASE_URL}${uri}`, {
 				method: "POST",
 				headers,
 				body: JSON.stringify(body),
@@ -38,9 +38,9 @@ const createPost =
 
 const createPut =
 	(headers: Headers) =>
-	async <R = unknown, B = unknown>(path: string, body: B) => {
+	async <R = unknown, B = unknown>(uri: string, body: B) => {
 		return getData<R>(
-			await fetch(`${PAYSTACK_BASE_URL}${path}`, {
+			await fetch(`${PAYSTACK_BASE_URL}${uri}`, {
 				method: "PUT",
 				headers,
 				body: JSON.stringify(body),
@@ -50,8 +50,8 @@ const createPut =
 
 const createDelete =
 	(headers: Headers) =>
-	async <R = unknown, B = unknown>(path: string) => {
-		return getData<R>(await fetch(createUrl(path), { headers }));
+	async <R = unknown>(uri: string) => {
+		return getData<R>(await fetch(createUrl(uri), { headers }));
 	};
 
 export function createApiClient(paystackSecret: string): ApiClientT {
