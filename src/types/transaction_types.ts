@@ -1,6 +1,5 @@
 import {
 	type AuthorizationT,
-	CardBrandOptionT,
 	type CurrencyOptionT,
 	type DomainOptionT,
 	type GatewayResponseOptionT,
@@ -132,7 +131,7 @@ export type TransactionListQueryParamsT = {
 	customer?: number;
 	/** target terminal */
 	terminalid?: string;
-	/** filter by status eg failed, success or abandoned */
+	/** filter by stStatusOptionTatus eg failed, success or abandoned */
 	status?: StatusOptionT;
 	/** filter by amount; specify in lowest denominations eg: `NGN kobo` etc */
 	amount?: number;
