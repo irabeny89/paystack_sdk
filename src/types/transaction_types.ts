@@ -1,223 +1,343 @@
 import type {
-	AuthorizationT,
-	CurrencyOptionT,
-	DomainOptionT,
-	GatewayResponseOptionT,
-	ListQueryParamsT,
-	MetaDataT,
-	PaymentChannelOptionT,
-	RiskActionOptionT,
+  AuthorizationT,
+  CurrencyOptionT,
+  DomainOptionT,
+  GatewayResponseOptionT,
+  ListQueryParamsT,
+  MetaDataT,
+  PaymentChannelOptionT,
+  RiskActionOptionT,
 } from "./global";
 
+/**
+ * Status options for transactions.
+ */
 export type StatusOptionT = "failed" | "abandoned" | "success";
 
+/**
+ * Options for who bears the charges.
+ */
 type BearerOptionT = "account" | "subaccount";
 
+/**
+ * Options for the type of history event.
+ */
 type HistoryTypeOptionT =
-	| "success"
-	| "action"
-	| "open"
-	| "input"
-	| "error"
-	| "close";
+  | "success"
+  | "action"
+  | "open"
+  | "input"
+  | "error"
+  | "close";
 
+/**
+ * Represents a customer.
+ */
 type CustomerT = {
-	id?: string | null;
-	first_name?: string | null;
-	last_name?: string | null;
-	email?: string | null;
-	customer_code?: string | null;
-	phone?: string | null;
-	metadata?: MetaDataT | null;
-	risk_action?: RiskActionOptionT | null;
-	international_format?: string | null;
+  /** Customer ID. */
+  id?: string | null;
+  /** Customer's first name. */
+  first_name?: string | null;
+  /** Customer's last name. */
+  last_name?: string | null;
+  /** Customer's email address. */
+  email?: string | null;
+  /** Customer code. */
+  customer_code?: string | null;
+  /** Customer's phone number. */
+  phone?: string | null;
+  /** Metadata associated with the customer. */
+  metadata?: MetaDataT | null;
+  /** Risk action to take. */
+  risk_action?: RiskActionOptionT | null;
+  /** Customer's phone number in international format. */
+  international_format?: string | null;
 };
 
+/**
+ * Represents a history event.
+ */
 type HistoryT = {
-	type: HistoryTypeOptionT;
-	message: string;
-	time: number;
+  /** Type of history event. */
+  type: HistoryTypeOptionT;
+  /** Message describing the event. */
+  message: string;
+  /** Timestamp of the event. */
+  time: number;
 };
 
+/**
+ * Represents transaction logs.
+ */
 type LogT = {
-	start_time: number;
-	time_spent: number;
-	attempts: number;
-	errors: number;
-	success: boolean;
-	mobile: boolean;
-	input: [];
-	history: HistoryT[];
+  /** Start time of the transaction. */
+  start_time: number;
+  /** Time spent processing the transaction. */
+  time_spent: number;
+  /** Number of attempts made. */
+  attempts: number;
+  /** Number of errors encountered. */
+  errors: number;
+  /** Whether the transaction was successful. */
+  success: boolean;
+  /** Whether the transaction was initiated from a mobile device. */
+  mobile: boolean;
+  /** Transaction input data. */
+  input: [];
+  /** History of events for the transaction. */
+  history: HistoryT[];
 };
 
+/**
+ * Represents transaction volume by currency.
+ */
 type VolumeByCurrencyT = {
-	currency: CurrencyOptionT;
-	/** amount specified in lowest denominations eg: `NGN kobo` etc */
-	amount: number;
+  /** Currency code. */
+  currency: CurrencyOptionT;
+  /** Amount in the lowest denomination (e.g., NGN kobo). */
+  amount: number;
 };
 
+/**
+ * Parameters for initializing a transaction.
+ */
 export type TransactionInitializeBodyParamsT = {
-	/** amount specified in lowest denominations eg: `NGN kobo` etc */
-	amount: string;
-	/** customer's email */
-	email: string;
-	/** currency to charge in eg NGN, GHS, ZAR or USD */
-	currency?: CurrencyOptionT;
-	/** unique alpha-numeric reference */
-	reference?: string;
-	/** used to override the callback url to redirect to after pay set on the dashboard eg https://e.com/ */
-	callback_url?: string;
-	/** used to convert this transaction to subscription with the predefined plan code. this would invalidate amount here and use the one specified on subscription */
-	plan?: string;
-	/** number of times to charge customer during subscription plan */
-	invoice_limit?: number;
-	/** stringified JSON with format @see {@link TransactionMetaDataT} */
-	metadata?: string;
-	/** payment channels that would be available on the returned link `authorization_url` */
-	channels?: PaymentChannelOptionT[];
-	/** use for transaction split eg SPL_8fl... */
-	split_code?: string;
-	/** sub account code that owns the pay eg ACCT_8ef... */
-	subaccount?: string;
-	/** used to override the split config for single payment. If set, the amount specified goes to the main account regardless of the split config */
-	transaction_charge?: number;
-	/** who bears charges? `account` or `subaccount` (defualts to `account`) */
-	bearer?: string;
+  /** Transaction amount in the lowest denomination (e.g., NGN kobo). */
+  amount: string;
+  /** Customer's email address. */
+  email: string;
+  /** Currency code. */
+  currency?: CurrencyOptionT;
+  /** Unique alphanumeric reference for the transaction. */
+  reference?: string;
+  /** Callback URL to redirect to after payment. */
+  callback_url?: string;
+  /** Plan code to convert the transaction to a subscription. */
+  plan?: string;
+  /** Number of times to charge the customer for a subscription. */
+  invoice_limit?: number;
+  /** Stringified JSON metadata. */
+  metadata?: string;
+  /** Payment channels to be available. */
+  channels?: PaymentChannelOptionT[];
+  /** Split code for transaction splitting. */
+  split_code?: string;
+  /** Subaccount code that owns the payment. */
+  subaccount?: string;
+  /** Transaction charge to override split config. */
+  transaction_charge?: number;
+  /** Who bears the charges (account or subaccount). Defaults to account. */
+  bearer?: string;
 };
 
+/**
+ * Parameters for charging an authorization.
+ */
 export type TransactionChargeAuthorizationBodyParamsT = {
-	/** filter by amount; specify in lowest denominations eg: `NGN kobo` etc */
-	amount: string;
-	/** customer's email attached to the authorization code */
-	email: string;
-	/** valid authorization code to charge; this are available from last payment */
-	authorization_code: string;
-	/** unique alpha-numeric reference */
-	reference?: string;
-	/** currency to charge in eg NGN, GHS, ZAR or USD */
-	currency?: CurrencyOptionT;
-	/** stringified json object
-	 * @see {@link TransactionMetaDataT} */
-	metadata?: string;
-	/** send `card` or `bank` or `card,bank` as an array for options to show the user paying */
-	channel?: PaymentChannelOptionT[];
-	/** code for subaccount that owns the payment eg ACCT_8f4s1eq7ml6rlzj */
-	subaccount?: string;
-	/** a flat fee to charge the subaccount for this transaction in lowest denominations */
-	transaction_charge?: number;
-	/** who bears Paystack charges eg account or subaccount */
-	bearer?: BearerOptionT;
-	/** if you are making a schedule charge call, it is a good idea to queue them to avoid transaction processing error */
-	queue?: boolean;
+  /** Amount to charge in the lowest denomination (e.g., NGN kobo). */
+  amount: string;
+  /** Customer's email address. */
+  email: string;
+  /** Authorization code. */
+  authorization_code: string;
+  /** Unique alphanumeric reference. */
+  reference?: string;
+  /** Currency code. */
+  currency?: CurrencyOptionT;
+  /** Stringified JSON metadata. */
+  metadata?: string;
+  /** Payment channels to display to the user. */
+  channel?: PaymentChannelOptionT[];
+  /** Subaccount code that owns the payment. */
+  subaccount?: string;
+  /** Flat fee to charge the subaccount. */
+  transaction_charge?: number;
+  /** Who bears Paystack charges (account or subaccount). */
+  bearer?: BearerOptionT;
+  /** Queue the transaction for scheduled charging. */
+  queue?: boolean;
 };
 
+/**
+ * Parameters for partially debiting a transaction.
+ */
 export type TransactionPartialDebitBodyParamsT = {
-	/** valid authorization code to charge; this are available from past payments */
-	authorization_code: string;
-	/** currency to charge in eg NGN, GHS, ZAR or USD */
-	currency: CurrencyOptionT;
-	/** filter by amount; specify in lowest denominations eg: `NGN kobo` etc */
-	amount: string;
-	/** customer's email attached to the authorization code */
-	email: string;
-	/** unique alpha-numeric reference */
-	reference?: string;
-	/** minimum amount to charge */
-	at_least?: string;
+  /** Authorization code. */
+  authorization_code: string;
+  /** Currency code. */
+  currency: CurrencyOptionT;
+  /** Amount to debit in the lowest denomination (e.g., NGN kobo). */
+  amount: string;
+  /** Customer's email address. */
+  email: string;
+  /** Unique alphanumeric reference. */
+  reference?: string;
+  /** Minimum amount to charge. */
+  at_least?: string;
 };
 
+/**
+ * Query parameters for listing transactions.
+ */
 export type TransactionListQueryParamsT = {
-	/** target customer id */
-	customer?: number;
-	/** target terminal */
-	terminalid?: string;
-	/** filter by stStatusOptionTatus eg failed, success or abandoned */
-	status?: StatusOptionT;
-	/** filter by amount; specify in lowest denominations eg: `NGN kobo` etc */
-	amount?: number;
+  /** Customer ID. */
+  customer?: number;
+  /** Terminal ID. */
+  terminalid?: string;
+  /** Transaction status. */
+  status?: StatusOptionT;
+  /** Transaction amount in the lowest denomination (e.g., NGN kobo). */
+  amount?: number;
 } & ListQueryParamsT;
 
+/**
+ * Parameters for exporting transactions.
+ */
 export type TransactionExportParamsT = {
-	/** target customer id */
-	customer?: number;
-	/** filter by status eg failed, success or abandoned */
-	status?: StatusOptionT;
-	/** specify transaction currency to export eg NGN, GHS, ZAR, USD */
-	currency?: CurrencyOptionT;
-	/** filter by amount; specify in lowest denominations eg: `NGN kobo` etc */
-	amount?: number;
-	/** `true` to export settled, `false` for pending and undefined to export all */
-	settled?: boolean;
-	/** id for the settlement whose transaction should be exported */
-	settlement?: number;
-	/** specify a payment page's id to export only transactions conducted on said page */
-	payment_page?: number;
+  /** Customer ID. */
+  customer?: number;
+  /** Transaction status. */
+  status?: StatusOptionT;
+  /** Transaction currency. */
+  currency?: CurrencyOptionT;
+  /** Transaction amount in the lowest denomination (e.g., NGN kobo). */
+  amount?: number;
+  /** Whether to export settled transactions only. */
+  settled?: boolean;
+  /** Settlement ID. */
+  settlement?: number;
+  /** Payment page ID. */
+  payment_page?: number;
 } & ListQueryParamsT;
 
+/**
+ * Query parameters for getting transaction totals.
+ */
 export type TransactionTotalsQueryParamsT = ListQueryParamsT;
 
+/**
+ * Response data for initializing a transaction.
+ */
 export type TransactionInitializeResponseDataT = {
-	/** redirect link to complete payment */
-	authorization_url: string;
-	/** access code */
-	access_code: string;
-	/** transaction reference */
-	reference: string;
+  /** Authorization URL. */
+  authorization_url: string;
+  /** Access code. */
+  access_code: string;
+  /** Transaction reference. */
+  reference: string;
 };
 
+/**
+ * Response data for a transaction.
+ */
 export type TransactionResponseDataT = {
-	id?: number | null;
-	domain?: DomainOptionT | null;
-	status?: StatusOptionT | null;
-	reference?: string | null;
-	amount?: number | null;
-	message?: string | null;
-	gateway_response?: GatewayResponseOptionT | null;
-	paid_at?: string | null;
-	created_at?: string | null;
-	channel?: PaymentChannelOptionT | null;
-	currency?: CurrencyOptionT | null;
-	ip_address?: string | null;
-	metadata?: MetaDataT | null;
-	log?: LogT | null;
-	fees?: number | null;
-	paidAt?: string | null;
-	authorization?: AuthorizationT | null;
-	fees_split?: unknown | null;
-	customer?: CustomerT | null;
-	plan?: unknown | null;
-	split?: object | null;
-	order_id?: unknown | null;
-	createdAt?: string | null;
-	requested_amount?: number | null;
-	pos_transaction_data?: unknown | null;
-	source?: unknown | null;
-	fees_breakdown?: unknown | null;
-	transaction_date?: string | null;
-	plan_object?: object | null;
-	subaccount?: object | null;
-	timeline?: unknown | null;
+  /** Transaction ID. */
+  id?: number | null;
+  /** Domain. */
+  domain?: DomainOptionT | null;
+  /** Transaction status. */
+  status?: StatusOptionT | null;
+  /** Transaction reference. */
+  reference?: string | null;
+  /** Transaction amount. */
+  amount?: number | null;
+  /** Transaction message. */
+  message?: string | null;
+  /** Gateway response. */
+  gateway_response?: GatewayResponseOptionT | null;
+  /** Time of payment. */
+  paid_at?: string | null;
+  /** Transaction creation time. */
+  created_at?: string | null;
+  /** Payment channel. */
+  channel?: PaymentChannelOptionT | null;
+  /** Currency code. */
+  currency?: CurrencyOptionT | null;
+  /** IP address. */
+  ip_address?: string | null;
+  /** Metadata. */
+  metadata?: MetaDataT | null;
+  /** Transaction logs. */
+  log?: LogT | null;
+  /** Transaction fees. */
+  fees?: number | null;
+  /** Time of payment. */
+  paidAt?: string | null;
+  /** Authorization details. */
+  authorization?: AuthorizationT | null;
+  /** Fees split. */
+  fees_split?: unknown | null;
+  /** Customer details. */
+  customer?: CustomerT | null;
+  /** Plan details. */
+  plan?: unknown | null;
+  /** Transaction split details. */
+  split?: object | null;
+  /** Order ID. */
+  order_id?: unknown | null;
+  /** Transaction creation time. */
+  createdAt?: string | null;
+  /** Requested amount. */
+  requested_amount?: number | null;
+  /** POS transaction data. */
+  pos_transaction_data?: unknown | null;
+  /** Transaction source. */
+  source?: unknown | null;
+  /** Fees breakdown. */
+  fees_breakdown?: unknown | null;
+  /** Transaction date. */
+  transaction_date?: string | null;
+  /** Plan object. */
+  plan_object?: object | null;
+  /** Subaccount details. */
+  subaccount?: object | null;
+  /** Transaction timeline. */
+  timeline?: unknown | null;
 };
 
+/**
+ * Response data for transaction timeline.
+ */
 export type TransactionTimelineResponseDataT = {
-	time_spent: number;
-	attempts: number;
-	authentication: null;
-	errors: number;
-	success: boolean;
-	mobile: boolean;
-	input: unknown[];
-	channel: PaymentChannelOptionT;
-	history: HistoryT[];
+  /** Time spent processing the transaction. */
+  time_spent: number;
+  /** Number of attempts made. */
+  attempts: number;
+  /** Authentication details. */
+  authentication: null;
+  /** Number of errors encountered. */
+  errors: number;
+  /** Whether the transaction was successful. */
+  success: boolean;
+  /** Whether the transaction was initiated from a mobile device. */
+  mobile: boolean;
+  /** Transaction input data. */
+  input: unknown[];
+  /** Payment channel. */
+  channel: PaymentChannelOptionT;
+  /** History of events for the transaction. */
+  history: HistoryT[];
 };
 
+/**
+ * Response data for transaction totals.
+ */
 export type TransactionTotalsResponseDataT = {
-	total_transactions: number;
-	unique_customers: number;
-	total_volume: number;
-	total_volume_by_currency: VolumeByCurrencyT[];
-	pending_transfers: number;
-	pending_transfers_by_currency: VolumeByCurrencyT[];
+  /** Total number of transactions. */
+  total_transactions: number;
+  /** Number of unique customers. */
+  unique_customers: number;
+  /** Total transaction volume. */
+  total_volume: number;
+  /** Total volume by currency. */
+  total_volume_by_currency: VolumeByCurrencyT[];
+  /** Number of pending transfers. */
+  pending_transfers: number;
+  /** Pending transfers by currency. */
+  pending_transfers_by_currency: VolumeByCurrencyT[];
 };
 
+/**
+ * Response data for exporting transactions.
+ */
 export type TransactionExportResponseDataT = Record<"path", string>;

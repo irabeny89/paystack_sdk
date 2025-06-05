@@ -1,71 +1,101 @@
 import type {
-	CurrencyOptionT,
-	DomainOptionT,
-	IdAndTimestampsT,
-	MetaDataT,
-	RecipientOptionT,
+  /** Currency options */
+  CurrencyOptionT,
+  /** Domain options */
+  DomainOptionT,
+  /** ID and timestamps */
+  IdAndTimestampsT,
+  /** Metadata */
+  MetaDataT,
+  /** Recipient options */
+  RecipientOptionT,
 } from "./global";
 
+/** Details of a recipient */
 type DetailT = {
-	authorization_code?: null;
-	account_number: string;
-	account_name: string;
-	bank_code: string;
-	bank_name: string;
+  /** Authorization code (optional) */
+  authorization_code?: null;
+  /** Account number */
+  account_number: string;
+  /** Account name */
+  account_name: string;
+  /** Bank code */
+  bank_code: string;
+  /** Bank name */
+  bank_name: string;
 };
 
+/** Parameters for creating a recipient using Nuban or Basa */
 type NubanOrBasaBodyParamsT = {
-	/** recipient type: `nuban`, `basa`, or `mobile_money`.
-	 * `nuban` for Nigeria, `mobile_money` for Ghana and `basa` for S.Africa.
-	 */
-	type: Omit<RecipientOptionT, "mobile_money">;
-	/** required if type is `nuban` or `basa`. You can get bank list from the `List Banks` API on Paystack docs */
-	bank_code: string;
-	/** required if type is `nuban` or `basa` */
-	account_number: string;
-	/** currency for the account receiving the transfer */
-	currency?: CurrencyOptionT;
-	/** a name for the recipient */
-	name?: string;
-	/** a description for this recipient */
-	description?: string;
-	/** an authorization code from the previous transaction */
-	authorization_code?: string;
-	/** add additional data about the recipient eg name, email etc */
-	metadata?: MetaDataT;
+  /** Recipient type: `nuban`, `basa`, or `mobile_money`.
+   * `nuban` for Nigeria, `mobile_money` for Ghana and `basa` for S.Africa.
+   */
+  type: Omit<RecipientOptionT, "mobile_money">;
+  /** Bank code. Required if type is `nuban` or `basa`. You can get bank list from the `List Banks` API on Paystack docs */
+  bank_code: string;
+  /** Account number. Required if type is `nuban` or `basa` */
+  account_number: string;
+  /** Currency for the account receiving the transfer */
+  currency?: CurrencyOptionT;
+  /** Name for the recipient */
+  name?: string;
+  /** Description for this recipient */
+  description?: string;
+  /** Authorization code from the previous transaction */
+  authorization_code?: string;
+  /** Additional data about the recipient (e.g., name, email) */
+  metadata?: MetaDataT;
 };
 
+/** Parameters for creating a mobile money recipient */
 type MobileMoneyBodyParamsT = Omit<
-	NubanOrBasaBodyParamsT,
-	"bank_code" | "account_number" | "type"
+  NubanOrBasaBodyParamsT,
+  "bank_code" | "account_number" | "type"
 > &
-	Record<"type", "mobile_money">;
+  Record<"type", "mobile_money">;
 
+/** Parameters for creating a recipient */
 export type CreateBodyParamsT<T extends RecipientOptionT> =
-	T extends "mobile_money" ? MobileMoneyBodyParamsT : NubanOrBasaBodyParamsT;
+  T extends "mobile_money" ? MobileMoneyBodyParamsT : NubanOrBasaBodyParamsT;
 
+/** Parameters for bulk creating recipients */
 export type BulkCreateBodyParamsT = {
-	/** list of transfer recipient object. Each object should contain required fields for recipient type(`nuban`, `basa` or `mobile_money`) option.
-	 * Parameters passed in single create can be used as well.
-	 */
-	batch: (MobileMoneyBodyParamsT | NubanOrBasaBodyParamsT)[];
+  /** List of transfer recipient objects. Each object should contain required fields for recipient type (`nuban`, `basa` or `mobile_money`) option.
+   * Parameters passed in single create can be used as well.
+   */
+  batch: (MobileMoneyBodyParamsT | NubanOrBasaBodyParamsT)[];
 };
 
+/** Response data for a single recipient */
 export type TransferRecipientResponseDataT = {
-	integration: number;
-	name: string;
-	recipient_code: string;
-	type: RecipientOptionT;
-	active: boolean;
-	currency: CurrencyOptionT;
-	domain: DomainOptionT;
-	is_deleted: boolean;
-	details: DetailT;
-	description?: string;
-	metadata?: null | MetaDataT;
+  /** Integration ID */
+  integration: number;
+  /** Recipient name */
+  name: string;
+  /** Recipient code */
+  recipient_code: string;
+  /** Recipient type */
+  type: RecipientOptionT;
+  /** Whether the recipient is active */
+  active: boolean;
+  /** Recipient currency */
+  currency: CurrencyOptionT;
+  /** Recipient domain */
+  domain: DomainOptionT;
+  /** Whether the recipient is deleted */
+  is_deleted: boolean;
+  /** Recipient details */
+  details: DetailT;
+  /** Recipient description (optional) */
+  description?: string;
+  /** Recipient metadata (optional) */
+  metadata?: null | MetaDataT;
 } & IdAndTimestampsT;
 
+/** Response data for bulk recipient creation */
 export type BulkCreateResponseDataT = {
-	success: TransferRecipientResponseDataT[];
-	errors: unknown[];
+  /** Successfully created recipients */
+  success: TransferRecipientResponseDataT[];
+  /** Errors encountered during creation */
+  errors: unknown[];
 };

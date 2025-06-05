@@ -1,70 +1,115 @@
 import type {
-	CurrencyOptionT,
-	DomainOptionT,
-	IdAndTimestampsT,
-	IntervalOptionT,
-	ListQueryParamsT,
+  /** Options for currency. */
+  CurrencyOptionT,
+  /** Options for domain. */
+  DomainOptionT,
+  /** Common ID and timestamps. */
+  IdAndTimestampsT,
+  /** Options for interval. */
+  IntervalOptionT,
+  /** Query parameters for list endpoints. */
+  ListQueryParamsT,
 } from "./global";
 import type { SubscriptionT } from "./subscription_types";
 
+/**
+ * Parameters for creating a new plan.
+ */
 export type PlanBodyParamsT = {
-	/** Name of plan. */
-	name: string;
-	/** Amount should be in the subunit of the supported currency. */
-	amount: number;
-	/** Interval in words. Valid intervals are: daily, weekly, monthly,quarterly, biannually (every 6 months), annually. */
-	interval: IntervalOptionT;
-	/** A description for this plan. Optional.*/
-	description?: string;
-	/** Set to false if you don't want invoices to be sent to your customers. Optional.*/
-	send_invoices?: boolean;
-	/** Set to false if you don't want text messages to be sent to your customers. Optional.*/
-	send_sms?: string;
-	/** Currency in which amount is set. Optional.*/
-	currency?: CurrencyOptionT;
-	/** Number of invoices to raise during subscription to this plan. Can be overridden by specifying an `invoice_limit` while subscribing. Optional.*/
-	invoice_limit?: number;
+  /** Name of the plan. */
+  name: string;
+  /** Amount in the subunit of the supported currency. */
+  amount: number;
+  /** Interval of the plan. Valid intervals are: daily, weekly, monthly, quarterly, biannually (every 6 months), annually. */
+  interval: IntervalOptionT;
+  /** Description of the plan. */
+  description?: string;
+  /** Whether to send invoices to customers. */
+  send_invoices?: boolean;
+  /** Whether to send SMS messages to customers. */
+  send_sms?: string;
+  /** Currency of the amount. */
+  currency?: CurrencyOptionT;
+  /** Number of invoices to raise during the subscription. Can be overridden when subscribing. */
+  invoice_limit?: number;
 };
 
+/**
+ * Data representing a plan.
+ */
 export type PlanDataT = {
-	name: string;
-	amount: number;
-	description?: string | null;
-	interval: IntervalOptionT;
-	integration: number;
-	domain: DomainOptionT;
-	plan_code: string;
-	send_invoices: boolean;
-	send_sms: boolean;
-	hosted_page: boolean;
-	hosted_page_url: string | null;
-	hosted_page_summary: string | null;
-	migrate: string | null;
-	currency: CurrencyOptionT;
+  /** Name of the plan. */
+  name: string;
+  /** Amount in the subunit of the supported currency. */
+  amount: number;
+  /** Description of the plan. */
+  description?: string | null;
+  /** Interval of the plan. */
+  interval: IntervalOptionT;
+  /** ID of the integration. */
+  integration: number;
+  /** Domain of the plan. */
+  domain: DomainOptionT;
+  /** Plan code. */
+  plan_code: string;
+  /** Whether to send invoices to customers. */
+  send_invoices: boolean;
+  /** Whether to send SMS messages to customers. */
+  send_sms: boolean;
+  /** Whether the plan has a hosted page. */
+  hosted_page: boolean;
+  /** URL of the hosted page. */
+  hosted_page_url: string | null;
+  /** Summary of the hosted page. */
+  hosted_page_summary: string | null;
+  /** Migration status. */
+  migrate: string | null;
+  /** Currency of the amount. */
+  currency: CurrencyOptionT;
 } & IdAndTimestampsT;
 
+/**
+ * Query parameters for listing plans.
+ */
 export type PlanListQueryParamsT = {
-	/** Filter list by plans with specified status */
-	status: string;
-	/** Filter list by plans with specified interval */
-	interval: string;
-	/** Filter list by plans with specified amount using the supported currency */
-	amount: number;
+  /** Filter plans by status. */
+  status: string;
+  /** Filter plans by interval. */
+  interval: string;
+  /** Filter plans by amount. */
+  amount: number;
 } & Pick<ListQueryParamsT, "page" | "perPage">;
 
+/**
+ * Data returned when retrieving plan information.
+ */
 export type PlanResponseDataT = {
-	subscriptions: SubscriptionT[];
-	integration: number;
-	domain: DomainOptionT;
-	name: string;
-	plan_code: string;
-	description?: string | null;
-	amount: number;
-	interval: IntervalOptionT;
-	send_invoices: boolean;
-	send_sms: boolean;
-	hosted_page: boolean;
-	hosted_page_url?: string | null;
-	hosted_page_summary?: unknown | null;
-	currency: CurrencyOptionT;
+  /** Subscriptions associated with the plan. */
+  subscriptions: SubscriptionT[];
+  /** ID of the integration. */
+  integration: number;
+  /** Domain of the plan. */
+  domain: DomainOptionT;
+  /** Name of the plan. */
+  name: string;
+  /** Plan code. */
+  plan_code: string;
+  /** Description of the plan. */
+  description?: string | null;
+  /** Amount in the subunit of the supported currency. */
+  amount: number;
+  /** Interval of the plan. */
+  interval: IntervalOptionT;
+  /** Whether to send invoices to customers. */
+  send_invoices: boolean;
+  /** Whether to send SMS messages to customers. */
+  send_sms: boolean;
+  /** Whether the plan has a hosted page. */
+  hosted_page: boolean;
+  /** URL of the hosted page. */
+  hosted_page_url?: string | null;
+  /** Summary of the hosted page. */
+  hosted_page_summary?: unknown | null;
+  /** Currency of the amount. */
+  currency: CurrencyOptionT;
 } & IdAndTimestampsT;
