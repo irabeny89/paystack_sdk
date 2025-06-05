@@ -10,6 +10,7 @@ This will serve as a Software Development Kit (SDK) for handling payments.
   - [Technical Info](#technical-info)
   - [How To Use](#how-to-use)
   - [Installation](#installation)
+  - [Typescript Configuration](#typescript-configuration)
   - [Features](#features)
   - [Test](#test)
   - [Conventional Commit and Release Management](#conventional-commit-and-release-management)
@@ -65,6 +66,22 @@ This package can be installed with many package managers:
 ```
 
 > visit JSR for more info: <https://jsr.io/@irabeny/paystack-sdk@latest>
+
+## Typescript Configuration
+
+To use this library with typescript, you need to add the following configuration to your `tsconfig.json` and `package.json` files:
+
+```json
+// tsconfig.json
+{
+  "moduleResolution": "bundler",
+}
+
+// package.json
+{
+  "type": "module"
+}
+```
 
 ## Features
 
