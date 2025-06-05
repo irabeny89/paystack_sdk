@@ -13,8 +13,8 @@ on:
     branches:
       - main
 
-  pull_request: 
-    branches: 
+  pull_request:
+    branches:
       - main
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
       - name: Get Next Version
         id: get_next_version
         uses: thenativeweb/get-next-version@main
-      
+
       - name: Update Version If Available
         if: steps.get_next_version.outputs.hasNextVersion
         run: |
@@ -74,7 +74,7 @@ jobs:
         run: |
           git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           git config --global user.name "${GITHUB_ACTOR}"
-          
+
           git add .
           git commit -m "chore: version bump to ${{ steps.get_next_version.outputs.version }}"
 
@@ -83,19 +83,19 @@ jobs:
 
       - name: Push Committed Changes
         if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
-        run: git push origin main
+        run: git pull origin main --rebase && git push origin main
 
       - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
         id: release
         with:
           release: true
-          git-user: '${{ env.USER }}'
-          git-user-email: '${{env.EMAIL}}'
-          
+          git-user: "${{ env.USER }}"
+          git-user-email: "${{env.EMAIL}}"
+
       - name: Generate Github Release Changelog
-        run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md  
-          
+        run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md
+
       - name: Upload Github Release
         id: gh-release
         uses: softprops/action-gh-release@v2
