@@ -1,12 +1,12 @@
-import {
-	type AuthorizationT,
-	type CurrencyOptionT,
-	type DomainOptionT,
-	type GatewayResponseOptionT,
-	type ListQueryParamsT,
-	type MetaDataT,
-	type PaymentChannelOptionT,
-	type RiskActionOptionT,
+import type {
+	AuthorizationT,
+	CurrencyOptionT,
+	DomainOptionT,
+	GatewayResponseOptionT,
+	ListQueryParamsT,
+	MetaDataT,
+	PaymentChannelOptionT,
+	RiskActionOptionT,
 } from "./global";
 
 export type StatusOptionT = "failed" | "abandoned" | "success";

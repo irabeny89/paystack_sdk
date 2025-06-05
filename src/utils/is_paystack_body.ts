@@ -7,11 +7,11 @@ import { createHmac } from "node:crypto";
  * @returns True if the signature matches the computed hash of the body, false otherwise.
  */
 export function isPaystackWebhookBody(
-  xPaystackSignature: string,
-  body: object,
+	xPaystackSignature: string,
+	body: object,
 ) {
-  const hash = createHmac("SHA512", Bun.env.PAYSTACK_SECRET_KEY ?? "")
-    .update(JSON.stringify(body))
-    .digest("hex");
-  return hash === xPaystackSignature;
+	const hash = createHmac("SHA512", Bun.env.PAYSTACK_SECRET_KEY ?? "")
+		.update(JSON.stringify(body))
+		.digest("hex");
+	return hash === xPaystackSignature;
 }

@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto"
+import { randomUUID } from "node:crypto";
 /**
  * Generates a payment reference string.
  * N.B - Useful with Paystack.
@@ -8,23 +8,23 @@ import { randomUUID } from "node:crypto"
  * @returns A payment reference string.
  */
 export function generatePaymentReference({
-  max = 16,
-  preTag,
+	max = 16,
+	preTag,
 }: {
-  max?: 10 | 16;
-  preTag?: string;
+	max?: 10 | 16;
+	preTag?: string;
 }) {
-  // slice max string length starting from the last
-  let ref = randomUUID().slice(-max);
-  if (preTag) {
-    // sanitize preTag
-    const tag = preTag
-      // remove invalid characters
-      .replace(/[^\w\d\-\.\,\=]/g, "")
-      // tag should not be longer than half of max length
-      .slice(0, max / 2);
-    // remove enough to fit valid tag - `+1` to allow `-` after tag
-    ref = `${tag}-${ref.slice(tag.length + 1)}`;
-  }
-  return ref;
+	// slice max string length starting from the last
+	let ref = randomUUID().slice(-max);
+	if (preTag) {
+		// sanitize preTag
+		const tag = preTag
+			// remove invalid characters
+			.replace(/[^\w\d\-\.\,\=]/g, "")
+			// tag should not be longer than half of max length
+			.slice(0, max / 2);
+		// remove enough to fit valid tag - `+1` to allow `-` after tag
+		ref = `${tag}-${ref.slice(tag.length + 1)}`;
+	}
+	return ref;
 }
