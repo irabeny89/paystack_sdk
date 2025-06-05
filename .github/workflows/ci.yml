@@ -83,7 +83,7 @@ jobs:
 
       - name: Push Committed Changes
         if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
-        run: git pull origin main --rebase && git push origin main
+        run: git push origin main
 
       - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
@@ -104,4 +104,5 @@ jobs:
           tag_name: ${{ steps.release.outputs.version }}
 
       - name: Publish To JSR
-        run: bunx jsr publish --allow-dirty
+        # run: bunx jsr publish --allow-dirty
+        run: bunx jsr publish
