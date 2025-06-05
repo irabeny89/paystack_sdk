@@ -29,7 +29,7 @@ if (!nextVersion) {
 }
 logger.info("next version exist as environment variable");
 logger.info(
-  `changing version and writing to file: ${dataList[0].data.version} -> ${nextVersion}`,
+  `changing version and writing to file: ${pkg.version} -> ${nextVersion}`,
 );
 Promise.all(
   dataList.map(({ data, path }) => {
