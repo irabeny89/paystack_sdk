@@ -9,6 +9,7 @@
     "test": "bun test",
     "test-utils": "bun test test/utils",
     "test-feats": "bun test test/features",
+    "bump-version": "bun run bump-version.ts",
     "build": "bun run build.mjs",
     "publish": "bunx jsr publish",
     "test-publish": "bunx jsr publish --dry-run",
