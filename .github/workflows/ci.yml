@@ -33,49 +33,29 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Format And Lint
-        run: bun run check
-
-      - name: Check For Format And Lint Changes
-        id: format_and_lint_changes
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "format_and_lint_changes=true" >> "$GITHUB_OUTPUT";
-          fi
-      #  will be used to push changes to remote with Git
       - name: Initialize Git Config
         run: |
           git config --global user.name "${env.USER}"
           git config --global user.email "${env.EMAIL}"
 
-      - name: Commit Format And Lint Changes If Available
-        if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true'
+      - name: Format And Lint
         run: |
-          git add .
-          git commit -m "style: format and lint"
-
-      - name: Get Next Version
-        id: get_next_version
-        uses: thenativeweb/get-next-version@main
-
-      - name: Update Version If Available
-        if: steps.get_next_version.outputs.hasNextVersion
-        run: |
-          echo "updating version in files"
-          NEXT_VERSION=${{ steps.get_next_version.outputs.version }} bun bump-version.ts
-
-      - name: Check For Version Bump Changes
-        id: version_bump_changes
-        run: |
+          bun run check
           if [[ -n $(git status --porcelain) ]]; then
-            echo "version_bump=true" >> "$GITHUB_OUTPUT";
+            git add .
+            git commit -m "style: format and lint"
           fi
 
-      - name: Commit Version Bump Changes If Available
-        if: steps.version_bump_changes.outputs.version_bump == 'true'
+      - name: Update Version
         run: |
-          git add .
-          git commit -m "chore: version bump to ${{ steps.get_next_version.outputs.version }}"
+          # run script to update version
+          bun bump-version
+          if [[ -n $(git status --porcelain) ]]; then
+            # run after version update above
+            NEW_VERSION=$(grep '"version":' package.json | cut -d '"' -f 4)
+            git add .
+            git commit -m "chore: version bump to $NEW_VERSION"
+          fi
 
       - name: Run Tests
         run: bun test
@@ -85,8 +65,10 @@ jobs:
           retry_wait_seconds: 5
 
       - name: Push Committed Changes
-        if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
-        run: git push origin main
+        run: |
+          if git rev-list --count --left-only @{upstream}...HEAD; then
+            git push origin main
+          fi
 
       - name: Conventional Commit and Semver Release
         uses: cocogitto/cocogitto-action@v3
