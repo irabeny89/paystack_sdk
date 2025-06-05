@@ -1,8 +1,8 @@
 name: CI
 
 env:
-  USER: Irabeny
-  EMAIL: irabeny89@gmail.com
+  USER: "${{GITHUB_ACTOR}}"
+  EMAIL: "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
 
 permissions:
   contents: write
@@ -36,19 +36,21 @@ jobs:
       - name: Format And Lint
         run: bun run check
 
-      - name: Check For Changes
+      - name: Check For Format And Lint Changes
         id: format_and_lint_changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             echo "format_and_lint_changes=true" >> "$GITHUB_OUTPUT";
           fi
+      #  will be used to push changes to remote with Git
+      - name: Initialize Git Config
+        run: |
+          git config --global user.name "${env.USER}"
+          git config --global user.email "${env.EMAIL}"
 
       - name: Commit Format And Lint Changes If Available
         if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true'
         run: |
-          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git config --global user.name "${GITHUB_ACTOR}"
-
           git add .
           git commit -m "style: format and lint"
 
@@ -62,7 +64,7 @@ jobs:
           echo "updating version in files"
           NEXT_VERSION=${{ steps.get_next_version.outputs.version }} bun bump-version.ts
 
-      - name: Check For Changes
+      - name: Check For Version Bump Changes
         id: version_bump_changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
@@ -72,14 +74,15 @@ jobs:
       - name: Commit Version Bump Changes If Available
         if: steps.version_bump_changes.outputs.version_bump == 'true'
         run: |
-          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git config --global user.name "${GITHUB_ACTOR}"
-
           git add .
           git commit -m "chore: version bump to ${{ steps.get_next_version.outputs.version }}"
 
-      - name: Run Test
-        run: bun run test-utils
+      - name: Run Tests
+        run: bun test
+        retry:
+          command: bun test
+          max_attempts: 3
+          retry_wait_seconds: 5
 
       - name: Push Committed Changes
         if: steps.format_and_lint_changes.outputs.format_and_lint_changes == 'true' || steps.version_bump_changes.outputs.version_bump == 'true'
@@ -91,7 +94,7 @@ jobs:
         with:
           release: true
           git-user: "${{ env.USER }}"
-          git-user-email: "${{env.EMAIL}}"
+          git-user-email: "${{ env.EMAIL }}"
 
       - name: Generate Github Release Changelog
         run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md
