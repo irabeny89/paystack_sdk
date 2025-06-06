@@ -56,11 +56,12 @@ jobs:
           fi
 
       - name: Run Tests
-        run: bun test
-        retry:
-          command: bun test
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
           max_attempts: 3
-          retry_wait_seconds: 5
+          retry_wait_seconds: 3
+          command: bun test
 
       - name: Push Committed Changes
         if: always()
