@@ -2,7 +2,7 @@ name: CI
 
 env:
   USER: ${{ GITHUB_ACTOR }}
-  EMAIL: "${{ GITHUB_ACTOR_ID }}+${{ GITHUB_ACTOR }}@users.noreply.github.com"
+  EMAIL: "${{ GITHUB_ACTOR }}+github-actions@users.noreply.github.com"
 
 permissions:
   contents: write
@@ -35,8 +35,8 @@ jobs:
 
       - name: Initialize Git Config
         run: |
-          git config --global user.name "${env.USER}"
-          git config --global user.email "${env.EMAIL}"
+          git config --global user.name "${{ env.USER }}"
+          git config --global user.email "${{ env.EMAIL }}"
 
       - name: Format And Lint
         run: |
@@ -48,10 +48,8 @@ jobs:
 
       - name: Update Version
         run: |
-          # run script to update version
           bun bump-version
           if [[ -n $(git status --porcelain) ]]; then
-            # run after version update above
             NEW_VERSION=$(grep '"version":' package.json | cut -d '"' -f 4)
             git add .
             git commit -m "chore: version bump to $NEW_VERSION"
@@ -65,8 +63,9 @@ jobs:
           retry_wait_seconds: 5
 
       - name: Push Committed Changes
+        if: always()
         run: |
-          if git rev-list --count --left-only @{upstream}...HEAD; then
+          if git rev-list --count --left-only @{upstream}...HEAD > /dev/null 2>&1; then
             git push origin main
           fi
 
@@ -89,4 +88,4 @@ jobs:
           tag_name: ${{ steps.release.outputs.version }}
 
       - name: Publish To JSR
-        run: bunx jsr publish --allow-dirty
+        run: bunx publish --allow-dirty
