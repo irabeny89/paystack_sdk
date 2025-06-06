@@ -25,4 +25,8 @@ describe("Transfer", () => {
 		const res = await trf.verify(trfRef);
 		expect(res.status).toBeTrue();
 	});
+	
+	test("should have utils object", async () => {
+		expect(trf.utils).toBeDefined();
+	});
 });

@@ -31,4 +31,8 @@ describe("Transaction", () => {
 		const res = await trx.export();
 		expect(res.status).toBeTrue();
 	});
+	
+	test("should have utils object", async () => {
+		expect(trx.utils).toBeDefined();
+	});
 });

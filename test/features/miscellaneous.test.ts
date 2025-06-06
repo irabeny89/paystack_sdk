@@ -29,4 +29,8 @@ describe("Miscellaneous", () => {
 
 		expect(response.data).toBeArray();
 	});
+	
+	test("should have utils object", async () => {
+		expect(misc.utils).toBeDefined();
+	});
 });
