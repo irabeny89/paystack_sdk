@@ -51,7 +51,7 @@ jobs:
 
       - name: Update Version
         run: |
-          NEXT_VERSION=${{ steps.next-version.outputs.version }} bun bump-version
+          NEXT_VERSION="${{ steps.next-version.outputs.version }}" bun bump-version
           if [[ -n $(git status --porcelain) ]]; then
             git add .
             git commit -m "chore: version bump to ${{ steps.next-version.outputs.version }}"
