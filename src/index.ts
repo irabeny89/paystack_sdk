@@ -12,6 +12,7 @@ import {
 import createLogger from "./logger";
 import type { ApiClientT, OptionT } from "./types/global";
 import { createApiClient } from "./utils/api_client";
+import * as utils from "./utils"
 
 export * from "./types/global";
 export * from "./types/transaction_types";
@@ -71,6 +72,9 @@ export default class Paystack {
 
 	/** pre-configured with Paystack secret and base url */
 	readonly apiClient: ApiClientT;
+	
+	/** Utility functions */
+	readonly utils: typeof utils;
 
 	// #region transaction
 	/**
@@ -225,6 +229,7 @@ export default class Paystack {
 		}
 		this.logger?.info("constructor => adding API client -> apiClient");
 		this.apiClient = createApiClient(paystackSecret);
+		this.utils = utils;
 
 		this.logger?.info(
 			"constructor => adding Transaction instance -> transaction",
