@@ -46,13 +46,18 @@ jobs:
             git commit -m "style: format and lint"
           fi
 
+      - name: Get Next Version
+        uses: cocogitto/cocogitto-action@v3
+        id: next-version
+        with:
+          dry-run: true
+      
       - name: Update Version
         run: |
-          bun bump-version
+          NEXT_VERSION=${{ steps.next-version.outputs.version }} bun bump-version
           if [[ -n $(git status --porcelain) ]]; then
-            NEW_VERSION=$(grep '"version":' package.json | cut -d '"' -f 4)
             git add .
-            git commit -m "chore: version bump to $NEW_VERSION"
+            git commit -m "chore: version bump to ${{ steps.next-version.outputs.version }}"
           fi
 
       - name: Run Tests
@@ -64,7 +69,6 @@ jobs:
           command: bun test
 
       - name: Push Committed Changes
-        if: always()
         run: |
           if git rev-list --count --left-only @{upstream}...HEAD > /dev/null 2>&1; then
             git push origin main
