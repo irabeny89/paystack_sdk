@@ -29,7 +29,14 @@ Things to note:
 This SDK provides a simple way to interact with the Paystack API. You can create a Paystack instance using the Paystack private key. The private key is required for most functionalities. After creating the instance, you can access various features like transactions, transfers, and more through the instance methods or by importing specific feature modules. See the examples below for different instantiation methods and usage examples.
 
 ```ts
-import Paystack, { Transaction, apiClient, convertToMainUnit, convertToSubUnit } from "@irabeny/paystack-sdk";
+import Paystack, {
+  Transaction,
+  apiClient,
+  convertToMainUnit,
+  convertToSubUnit,
+  generatePaymentReference,
+  isPaystackWebhookBody,
+} from "@irabeny/paystack-sdk";
 
 const secret = "private-key";
 const option = { logLevel: "info" }; // optional, may be used in non-production environments
@@ -45,6 +52,21 @@ const _transaction = paystack.transaction;
 // call Paystack API directly with pre-configured options eg baseUrl and secret from the instance
 paystack.apiClient.get("/transactions");
 transaction.apiClient.get("/transactions");
+
+// validate Paystack webhook with custom header (x-paystack-signature) value using `isPaystackWebhookBody` utility function
+function validatePaystackSignature(
+  headers: Record<string, string>,
+  body: { event: string; data: object },
+) {
+  // validate webhook body using `isPaystackWebhookBody` utility function
+  return isPaystackWebhookBody(headers["x-paystack-signature"], body);
+}
+
+// validate webhook signature using function above
+// validatePaystackSignature(headers, body); // true
+
+// generate payment reference using `generatePaymentReference` utility function
+generatePaymentReference({ preTag: "PAY", length: 13 }); // "PAY-123456789"
 
 // convert amount to main unit
 convertToMainUnit(100); // 10000
