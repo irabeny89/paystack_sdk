@@ -85,4 +85,4 @@ jobs:
           tag_name: ${{ steps.release.outputs.version }}
 
       - name: Publish To JSR
-        run: bunx publish --allow-dirty
+        run: bun run publish-dirty
