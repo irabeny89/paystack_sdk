@@ -28,7 +28,7 @@ if (!nextVersion) {
     logger.error("cog not found in path");
     process.exit(1);
   }
-  nextVersion = await $`${cog} bump --dry-run --auto`.text();
+  nextVersion = (await $`${cog} bump --dry-run --auto`.text()).trim();
 }
 logger.info("next version exist as environment variable");
 logger.info(
