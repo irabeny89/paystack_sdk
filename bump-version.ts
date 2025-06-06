@@ -17,19 +17,9 @@ const dataList = [
   },
 ];
 
-let nextVersion = Bun.env.NEXT_VERSION;
+const nextVersion = Bun.env.NEXT_VERSION;
+if (!nextVersion) throw new Error("NEXT_VERSION environment variable not set");
 
-if (!nextVersion) {
-  logger.info("next version does not exist as environment variable");
-  logger.warn("install cocogitto and ensure no uncommitted changes");
-  logger.info("using cog to get next version");
-  const cog = await $`which cog`.text();
-  if (!cog) {
-    logger.error("cog not found in path");
-    process.exit(1);
-  }
-  nextVersion = (await $`${cog} bump --dry-run --auto`.text()).trim();
-}
 logger.info("next version exist as environment variable");
 logger.info(
   `changing version and writing to file: ${pkg.version} -> ${nextVersion}`,
