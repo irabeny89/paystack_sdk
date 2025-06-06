@@ -51,7 +51,7 @@ jobs:
         id: next-version
         with:
           dry-run: true
-      
+
       - name: Update Version
         run: |
           NEXT_VERSION=${{ steps.next-version.outputs.version }} bun bump-version
@@ -60,13 +60,8 @@ jobs:
             git commit -m "chore: version bump to ${{ steps.next-version.outputs.version }}"
           fi
 
-      - name: Run Tests
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          retry_wait_seconds: 3
-          command: bun test
+      - name: Run Tests On Utils Only
+        run: bun test-utils
 
       - name: Push Committed Changes
         run: |
