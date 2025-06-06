@@ -17,15 +17,18 @@ const dataList = [
   },
 ];
 
-logger.info("getting next version from environment variable");
 let nextVersion = Bun.env.NEXT_VERSION;
 
-logger.info("checking if next version exist as environment variable");
 if (!nextVersion) {
   logger.info("next version does not exist as environment variable");
   logger.warn("install cocogitto and ensure no uncommitted changes");
   logger.info("using cog to get next version");
-  nextVersion = await $`$(which cog) bump --dry-run --auto`.text();
+  const cog = await $`which cog`.text();
+  if (!cog) {
+    logger.error("cog not found in path");
+    process.exit(1);
+  }
+  nextVersion = await $`${cog} bump --dry-run --auto`.text();
 }
 logger.info("next version exist as environment variable");
 logger.info(
