@@ -1,9 +1,5 @@
 name: CI
 
-env:
-  USER: Irabeny
-  EMAIL: irabeny89@gmail.com
-
 permissions:
   contents: write
   id-token: write
@@ -74,8 +70,8 @@ jobs:
         id: release
         with:
           release: true
-          git-user: "${{ env.USER }}"
-          git-user-email: "${{ env.EMAIL }}"
+          git-user: "${{ github.actor }}"
+          git-user-email: "${{ github.actor }}+github-actions@users.noreply.github.com"
 
       - name: Generate Github Release Changelog
         run: cog changelog --at ${{ steps.release.outputs.version }} -t full_hash > GITHUB_CHANGELOG.md
