@@ -47,8 +47,7 @@ jobs:
         id: next-version
         with:
           dry-run: true
-          git-user: "${{ github.actor }}"
-          git-user-email: "${{ github.actor }}+github-actions@users.noreply.github.com"
+        continue-on-error: true
 
       - name: Update Version
         run: |
