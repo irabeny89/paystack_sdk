@@ -14,23 +14,23 @@ import { randomUUID } from "node:crypto";
  * @returns A payment reference string.
  */
 export function generatePaymentReference({
-	max = 16,
+	length = 16,
 	preTag,
 }:
 	| {
-			max?: 10 | 16;
+			length?: 10 | 16;
 			preTag?: string;
 	  }
 	| undefined = {}): string {
 	// slice max string length starting from the last
-	let ref = randomUUID().slice(-max);
+	let ref = randomUUID().slice(-length);
 	if (preTag) {
 		// sanitize preTag
 		const tag = preTag
 			// remove invalid characters
 			.replace(/[^a-zA-Z0-9\-\.\,\=]/g, "")
 			// tag should not be longer than half of max length
-			.slice(0, max / 2);
+			.slice(0, length / 2);
 		// remove enough to fit valid tag - `+1` to allow `-` after tag
 		ref = `${tag}-${ref.slice(tag.length + 1)}`;
 	}

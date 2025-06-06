@@ -7,13 +7,13 @@ describe("generatePaymentReference", () => {
 		expect(paymentReference.length).toBe(16);
 	});
 
-	test("should generate a payment reference of 10 characters when max is 10", () => {
-		const paymentReference = generatePaymentReference({ max: 10 });
+	test("should generate a payment reference of 10 characters when length is 10", () => {
+		const paymentReference = generatePaymentReference({ length: 10 });
 		expect(paymentReference.length).toBe(10);
 	});
 
-	test("should generate a payment reference of 16 characters when max is 16", () => {
-		const paymentReference = generatePaymentReference({ max: 16 });
+	test("should generate a payment reference of 16 characters when length is 16", () => {
+		const paymentReference = generatePaymentReference({ length: 16 });
 		expect(paymentReference.length).toBe(16);
 	});
 
@@ -22,10 +22,10 @@ describe("generatePaymentReference", () => {
 		expect(paymentReference.startsWith("TEST-")).toBe(true);
 	});
 
-	test("should generate a payment reference with a prefix and characters not more than max", () => {
+	test("should generate a payment reference with a prefix and characters not more than length", () => {
 		const paymentReference = generatePaymentReference({
 			preTag: "TEST",
-			max: 10,
+			length: 10,
 		});
 		expect(paymentReference.startsWith("TEST-")).toBe(true);
 		expect(paymentReference.length).toBe(10);
