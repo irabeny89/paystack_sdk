@@ -19,7 +19,7 @@ describe("Subscription", () => {
 		const res = await sub.fetch(subCode);
 		expect(res.data);
 	});
-	
+
 	test("should have utils object", async () => {
 		expect(sub.utils).toBeDefined();
 	});

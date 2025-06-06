@@ -11,8 +11,8 @@ import {
 } from "./features";
 import createLogger from "./logger";
 import type { ApiClientT, OptionT } from "./types/global";
+import * as utils from "./utils";
 import { createApiClient } from "./utils/api_client";
-import * as utils from "./utils"
 
 export * from "./types/global";
 export * from "./types/transaction_types";
@@ -72,7 +72,7 @@ export default class Paystack {
 
 	/** pre-configured with Paystack secret and base url */
 	readonly apiClient: ApiClientT;
-	
+
 	/** Utility functions */
 	readonly utils: typeof utils;
 

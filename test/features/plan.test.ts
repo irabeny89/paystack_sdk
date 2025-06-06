@@ -33,7 +33,7 @@ describe("Plan", () => {
 
 		expect(response.data.plan_code).toBe(planCode);
 	});
-	
+
 	test("should have utils object", async () => {
 		expect(plan.utils).toBeDefined();
 	});
