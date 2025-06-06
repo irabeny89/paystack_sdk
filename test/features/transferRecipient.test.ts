@@ -19,7 +19,7 @@ describe("Transfer Recipient", () => {
 		const res = await trfRec.fetch(recCode);
 		expect(res.status).toBeTrue();
 	});
-	
+
 	test("should have utils object", async () => {
 		expect(trfRec.utils).toBeDefined();
 	});
