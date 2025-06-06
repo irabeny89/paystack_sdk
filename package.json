@@ -12,6 +12,7 @@
     "bump-version": "bun run bump-version.ts",
     "build": "bun run build.mjs",
     "publish": "bunx jsr publish",
+    "publish-dirty": "bunx jsr publish --allow-dirty",
     "test-publish": "bunx jsr publish --dry-run",
     "get-next-version": "cog bump --dry-run --auto"
   },
