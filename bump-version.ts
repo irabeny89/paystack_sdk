@@ -25,7 +25,7 @@ if (!nextVersion) {
   logger.info("next version does not exist as environment variable");
   logger.warn("install cocogitto and ensure no uncommitted changes");
   logger.info("using cog to get next version");
-  nextVersion = await $`cog bump --dry-run --auto`.text();
+  nextVersion = await $`$(which cog) bump --dry-run --auto`.text();
 }
 logger.info("next version exist as environment variable");
 logger.info(
